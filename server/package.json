@@ -12,6 +12,7 @@
   "author": "Vaclav Kyslik",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.4.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
