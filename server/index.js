@@ -5,10 +5,12 @@ import dotenv from 'dotenv';
 // import * as dotenv from 'dotenv'; // zero-dependency module, loads environment variables from a .env file into process.env
 import router from './routes/testRoute.js';
 import colors from 'colors'; // color and style in node.js console
+import recipesRouter from './routes/Router.js';
 
 dotenv.config();
 
 const addMiddlewares = (app) => {
+  // adds middleware to the application
   // const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -26,9 +28,11 @@ const startServer = (app) => {
 // whatever arrives, use API version 1
 const loadRoutes = (app) => {
   app.use('/api/', router);
+  app.use('/api/curated-recipes', recipesRouter);
 };
 
 const DBConnection = async () => {
+  // connects to the database
   try {
     await mongoose.connect(process.env.MONGO_DB);
     console.log('connection with MongoDB established'.bgGreen);
@@ -37,11 +41,12 @@ const DBConnection = async () => {
   }
 };
 
-// IIFE (Immediately Invoked Function Expression) -
+//! IIFE (Immediately Invoked Function Expression) -
 // to run the function immediately after defining it
 //to not pollute the global scope
 
 (async function controller() {
+  // main function that runs the server
   const app = express();
   await DBConnection();
   addMiddlewares(app);
