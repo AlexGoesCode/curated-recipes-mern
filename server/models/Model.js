@@ -3,14 +3,25 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const recipeSchema = new Schema({
+  imageUrl: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
     unique: true,
   },
-  origin: {
+  diet: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  countryOrigin: {
     type: String,
     required: false,
+    unique: false,
   },
 
   ingredients: {
@@ -24,10 +35,6 @@ const recipeSchema = new Schema({
   time: {
     type: Number,
     required: false,
-  },
-  difficulty: {
-    type: String,
-    required: true,
   },
   likes: {
     type: Number,
