@@ -13,4 +13,21 @@ const allRecipes = async (req, res) => {
   }
 };
 
-export { allRecipes };
+const recipesByIngredient = async (req, res) => {
+  // console.log('req :>> '.bgYellow, req);
+  const ingredients = req.params.ingredients;
+
+  try {
+    const allRecipes = await RecipeModel.find({
+      ingredients: { $all: ingredients.split(',') },
+    });
+    console.log('allRecipes', allRecipes);
+
+    res.status(200).json({ number: allRecipes.length, allRecipes }); // Added response status + number of recipes
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    res.status(500).send('Internal Server Error'); // Added error handling
+  }
+};
+
+export { allRecipes, recipesByIngredient };
