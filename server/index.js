@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 // import * as dotenv from 'dotenv'; // zero-dependency module, loads environment variables from a .env file into process.env
 import router from './routes/testRoute.js';
-import colors from 'colors'; // color and style in node.js console
+import colors from 'colors'; // color and style in node.js console '.bgYellow' etc
 import recipesRouter from './routes/Router.js';
 
 dotenv.config();
