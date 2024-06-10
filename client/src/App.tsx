@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import NavBar from './components/Navbar';
+import FlowNavBar from './components/FlowNavbar';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div>
-      <NavBar />
+      <FlowNavBar />
     </div>
   );
 }
