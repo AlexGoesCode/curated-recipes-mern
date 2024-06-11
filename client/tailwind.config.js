@@ -7,7 +7,11 @@ export default {
     './node_modules/flowbite-react/lib/esm/**/*.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'custom-image': 'url("./assets/spices.png")',
+      },
+    },
   },
   plugins: [require('flowbite/plugin')],
 };

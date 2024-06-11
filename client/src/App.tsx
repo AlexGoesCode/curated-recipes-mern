@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import FlowFooter from './components/FlowFooter';
+import DesktopImage from './assets/spices.png';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,9 +18,13 @@ function App() {
   }, []);
 
   return (
-    <div className='margin'>
+    <div
+      className='relative h-screen bg-cover bg-center flex flex-col min-h-screen'
+      style={{ backgroundImage: `url(${DesktopImage})` }}
+    >
+      <div className='absolute inset-0 bg-black bg-opacity-20'></div>
       <Navbar />
-      <div>
+      <div className='flex-grow'>
         {/* Your main content goes here */}
         <div className='p-4'>
           <h1>Welcome to My Website</h1>
