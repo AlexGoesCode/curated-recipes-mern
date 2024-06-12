@@ -1,3 +1,4 @@
+//* Footer from Flowbite
 'use client';
 
 import { Footer } from 'flowbite-react';
