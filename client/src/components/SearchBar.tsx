@@ -1,4 +1,7 @@
 //* SearchBar with Dropdown from Flowbite
+
+const SearchBar = () => {
+  return (
 <form className='max-w-lg mx-auto'>
   <div className='flex'>
     <label
@@ -103,4 +106,8 @@
       </button>
     </div>
   </div>
-</form>;
+</form>
+  );
+};
+
+export default SearchBar;
