@@ -1,10 +1,11 @@
 import { Routes as RouterRoutes, Route } from 'react-router-dom';
+// import { Router } from 'react-router-dom';
 import Home from '../pages/Home';
+import Recipes from '../pages/Recipes';
 // import Login from '../../pages/login/Login';
 // import Logout from '../../pages/logout/Logout';
 // import SignUp from '../../pages/sign-up/SignUp';
 // import NotFound from '../../pages/not-found/NotFound';
-import Recipes from '../pages/Recipes';
 // import CreateRecipe from '../../pages/create-recipe/CreateRecipe';
 // import ProtectedRoute from '../protected-route/ProtectedRoute';
 
