@@ -1,5 +1,4 @@
-import { Routes as RouterRoutes, Route } from 'react-router-dom';
-// import { Router } from 'react-router-dom';
+import { Routes as RouterRoutes, Router, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Recipes from '../pages/Recipes';
 // import Login from '../../pages/login/Login';

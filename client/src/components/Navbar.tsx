@@ -12,12 +12,13 @@ import {
   Transition,
 } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Recipes', href: '#', current: false },
-  { name: 'Create Recipe', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Home', href: '/', current: true },
+  { name: 'Recipes', href: '/recipes', current: false },
+  { name: 'Create Recipe', href: '/create-recipe', current: false },
+  { name: 'Calendar', href: 'CHANGE!!!!', current: false }, //* TO BE CHANGED !!!
 ];
 
 function classNames(...classes: string[]) {
@@ -48,9 +49,9 @@ const Navbar = () => {
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
-                        href={item.href}
+                        to={item.href}
                         className={classNames(
                           item.current
                             ? 'bg-gray-900 text-white'
@@ -60,7 +61,7 @@ const Navbar = () => {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -148,8 +149,8 @@ const Navbar = () => {
               {navigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
-                  as='a'
-                  href={item.href}
+                  as={Link}
+                  to={item.href}
                   className={classNames(
                     item.current
                       ? 'bg-gray-900 text-white'
