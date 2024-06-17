@@ -40,11 +40,11 @@ const Recipes = () => {
   };
 
   return (
-    <div className='min-h-screen flex flex-col'>
-      <div className='flex-shrink-0'>
+    <div>
+      <div>
         <SearchBar onSearch={handleSearch} />
       </div>
-      <div className='flex-grow overflow-auto'>
+      <div>
         <GridList
           items={items}
           onItemClick={handleItemClick}

@@ -18,7 +18,7 @@ function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <form className='max-w-lg mx-auto' onSubmit={handleSubmit}>
-      <div className='flex flex-col min-h-screen'>
+      <div className='flex'>
         <div className='flex-grow'>
           <label
             htmlFor='search-dropdown'
