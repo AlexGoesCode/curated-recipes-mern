@@ -70,7 +70,7 @@ const getRecipeById = async (req, res) => {
 
   //1. extract the recipeId from the request object (inside params object)
 
-  //2. create a variable that is gonna store the recipe (only one an object) we want to find in our DB
+  //2. create a variable that is gonna store the recipe (only one, an object) we want to find in our DB
 
   //3. inside that variable, use the mongoose model (recipeModel) to find the recipe using the id :https://mongoosejs.com/docs/api/model.html#Model.findById()
 

@@ -12,6 +12,10 @@ export default {
         'custom-image': 'url("./assets/spices.png")',
       },
     },
+
+    container: {
+      center: true,
+    },
   },
   plugins: [require('flowbite/plugin', '@tailwindcss/forms')],
 };
