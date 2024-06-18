@@ -2,31 +2,33 @@ import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
 import GridItem from '../components/GridItem';
+import { Recipe } from '../types/Types';
 
 const Recipes = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [items, setItems] = useState([]);
+  // const [searchQuery, setSearchQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  // Fetch data based on searchQuery and currentPage
+  const fetchData = async () => {
+    // Example fetch function, replace with your actual data fetching logic
+    const response = await fetch(
+      `http://localhost:5022/api/curated-recipes/recipesbyingredients?ingredients=${searchTerm}&page=${currentPage}`
+    );
+    const data = await response.json();
+    console.log('data :>> ', data);
+    setItems(data);
+    setTotalPages(data.totalPages);
+  };
+  // useEffect(() => {
 
-  useEffect(() => {
-    // Fetch data based on searchQuery and currentPage
-    const fetchData = async () => {
-      // Example fetch function, replace with your actual data fetching logic
-      const response = await fetch(
-        `https://api.example.com/recipes?query=${searchQuery}&page=${currentPage}`
-      );
-      const data = await response.json();
+  //   fetchData();
+  // }, [searchQuery, currentPage]);
 
-      setItems(data.items);
-      setTotalPages(data.totalPages);
-    };
-
+  const handleSearch = () => {
+    // setSearchQuery(query);
     fetchData();
-  }, [searchQuery, currentPage]);
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
     setCurrentPage(1); // Reset to the first page on a new search
   };
 
@@ -42,7 +44,7 @@ const Recipes = () => {
   return (
     <div>
       <div>
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar handleSearch={handleSearch} setSearchTerm={setSearchTerm} />
       </div>
       <div>
         <GridList

@@ -1,9 +1,10 @@
+import { Recipe } from '../types/Types';
 import GridItem from './GridItem';
 import Pagination from './Pagination';
 
 // Interface for the props that the GridList component will receive
 interface GridListProps {
-  items: GridItem[];
+  items: Recipe[];
   onItemClick: (item: GridItem) => void;
   totalPages: number;
   currentPage: number;

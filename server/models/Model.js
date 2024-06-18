@@ -6,7 +6,7 @@ const recipeSchema = new Schema({
   imageUrl: {
     type: String,
     required: true,
-    unique: true,
+    unique: false,
   },
   name: {
     type: String,
@@ -40,8 +40,12 @@ const recipeSchema = new Schema({
     type: Number,
     required: false,
   },
+  difficulty: {
+    type: String,
+    enum: ['easy', 'medium', 'hard'],
+  },
 });
 
-const RecipeModel = mongoose.model('recipes', recipeSchema);
+const RecipeModel = mongoose.model('recipe', recipeSchema);
 
 export default RecipeModel;

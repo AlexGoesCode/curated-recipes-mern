@@ -1,14 +1,13 @@
 export type Recipe = {
-  id: string;
-  title: string;
-  cuisine?: string;
-  diet?: string;
-  name?: string; // Make this optional if it's not always available
-  image: string;
-  type?: string;
+  _id: string;
+  name: string; // Make this optional if it's not always available
+
+  origin: string;
   ingredients: string[];
   instructions: string;
-  author: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  likes: number;
+  imageUrl: string;
 };
 
 export type UserType = {

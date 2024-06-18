@@ -1,6 +1,7 @@
 import { Routes as RouterRoutes, Router, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Recipes from '../pages/Recipes';
+import SingleRecipe from '../pages/SingleRecipe';
 // import Login from '../../pages/login/Login';
 // import Logout from '../../pages/logout/Logout';
 // import SignUp from '../../pages/sign-up/SignUp';
@@ -20,6 +21,14 @@ const Routes = () => {
         element={
           //   <ProtectedRoute>
           <Recipes />
+          //   </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/recipes/:recipeid'
+        element={
+          //   <ProtectedRoute>
+          <SingleRecipe />
           //   </ProtectedRoute>
         }
       />
