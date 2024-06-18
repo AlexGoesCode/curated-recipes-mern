@@ -17,7 +17,7 @@ const GridItem = ({ items, onItemClick }: GridItemProps) => {
     <div className='grid-container'>
       {items.map((item) => (
         <div
-          key={item.id}
+          key={item._id}
           className='grid-item'
           onClick={() => onItemClick(item)}
         >

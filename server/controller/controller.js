@@ -9,7 +9,7 @@ const allRecipes = async (req, res) => {
     res.status(200).json({ number: allRecipes.length, allRecipes }); // Added response status + number of recipes
   } catch (error) {
     console.error('Error fetching recipes:', error);
-    res.status(500).send('Internal Server Error'); // Added error handling
+    res.status(500).json({ message: 'Internal Server Error' }); // Added error handling
   }
 };
 
@@ -66,15 +66,45 @@ const getRecipesByIngredients = async (req, res) => {
 
 const getRecipeById = async (req, res) => {
   console.log('get recipes by id working');
-  console.log('req>>>>', req);
+  // console.log('req>>>>', req);
 
+  try {
+    const recipeId = req.params.recipeid;
+    console.log('recipeId>>>>', recipeId);
+    const recipe = await RecipeModel.findById(recipeId);
+    //scenario 1: there is no recipe coming from the database
+    console.log('recipe :>> ', recipe);
+    if (!recipe) {
+      res.status(200).json({
+        message: 'no recipes with this id',
+        data: null,
+        error: false,
+      });
+      return;
+    }
+    console.log('recipe :>> ', recipe);
+    res.status(200).json({
+      message: 'this are the recipes found',
+      data: recipe,
+      error: false,
+    });
+  } catch (error) {
+    console.log('error', error);
+    res.status(500).json({
+      message: 'something went wrong',
+      data: null,
+      error: true,
+    });
+  }
+  // 1. extract the ingredient from the query
+  // const ingredient = req.query.ingredients;
   //1. extract the recipeId from the request object (inside params object)
-
+  //* const recipeId = req.params.recipeId;
   //2. create a variable that is gonna store the recipe (only one, an object) we want to find in our DB
-
   //3. inside that variable, use the mongoose model (recipeModel) to find the recipe using the id :https://mongoosejs.com/docs/api/model.html#Model.findById()
-
+  //* const recipe = await RecipeModel.findById(recipeId);
   //4. send a response to the client with that recipe (you have to see it in postman)
+  //* res.status(200).json(recipe);
 };
 export {
   allRecipes,

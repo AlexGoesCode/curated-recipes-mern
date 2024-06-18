@@ -12,7 +12,6 @@ const Recipes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // Fetch data based on searchQuery and currentPage
   const fetchData = async () => {
-    // Example fetch function, replace with your actual data fetching logic
     const response = await fetch(
       `http://localhost:5022/api/curated-recipes/recipesbyingredients?ingredients=${searchTerm}&page=${currentPage}`
     );
