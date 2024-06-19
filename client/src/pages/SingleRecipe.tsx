@@ -1,8 +1,3 @@
-// what is missing on this page?
-// 1. The fetch function is not being called when the component mounts.
-// 2. The fetch function is not being called when the currentPage changes.
-// 3. The fetch function is not being called when the searchQuery changes.
-
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Recipe, SingleRecipeOkResponse } from '../types/Types';
@@ -45,11 +40,12 @@ function SingleRecipe() {
   }
 
   return (
-    <div style={{ color: 'white' }}>
+    <div className='md:container absolute max-w-l text-center text-white bg-gray-500 font h-96 w-20 md:mx-auto'>
       <h1>Recipe:{recipe?._id} </h1>
       <p>name:{recipe?.name}</p>
       <p>country:{recipe?.origin}</p>
-      {/* below we do conditional rendering (show us the right part of the && only if the left part is tru). Does the same thing as the code above */}
+      {/* // below we do conditional rendering (show us the right part of the &&
+      only if the left part is true). Does the same thing as the code above. */}
       {/* {recipe && (
         <>
           <h1>Recipe:{recipe._id} </h1>
@@ -60,8 +56,5 @@ function SingleRecipe() {
     </div>
   );
 }
-//2.inside <SingleRecipe/> grab the recipeId from the URL ,store it in a variable with useParams() hook from react router https://reactrouter.com/en/main/hooks/use-params
-
-//3. Inside <SingleRecipe/> build a fetch function that makes a fetch request to your backend end point, using the variable you created storing the parameter from the url.
 
 export default SingleRecipe;
