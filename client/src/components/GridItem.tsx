@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Recipe } from '../types/Types';
 
 interface GridItem {
@@ -21,7 +22,13 @@ const GridItem = ({ items, onItemClick }: GridItemProps) => {
           className='grid-item'
           onClick={() => onItemClick(item)}
         >
-          <img src={item.imageUrl} alt={item.name} style={{ width: '150px' }} />
+          <Link to={`${item._id}`}>
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              style={{ width: '130px' }}
+            />
+          </Link>
           <p style={{ color: 'white' }}>{item.name}</p>
           <button onClick={() => onItemClick()}>View Details</button>
         </div>
