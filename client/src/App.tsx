@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import FlowFooter from './components/Footer';
-import DesktopImage from './assets/spices2.png';
+import DesktopImage from './assets/dim-spices.png';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes/Routes';
 
@@ -25,7 +25,7 @@ function App() {
         className='relative h-screen bg-cover bg-center flex flex-col min-h-screen saturate-100'
         style={{ backgroundImage: `url(${DesktopImage})` }}
       >
-        <div className='fixed inset-0 bg-black bg-opacity-50'></div>
+        <div className='fixed'></div>
         <Navbar />
         <div className='flex-grow'>
           Your main content goes here
