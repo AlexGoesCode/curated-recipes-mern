@@ -5,7 +5,7 @@ import Pagination from './Pagination';
 // Interface for the props that the GridList component will receive
 interface GridListProps {
   items: Recipe[];
-  onItemClick: (item: GridItem) => void;
+  onItemClick: (item: Recipe) => void;
   totalPages: number;
   currentPage: number;
   handlePageChange: (page: number) => void;
@@ -20,9 +20,18 @@ function GridList({
   handlePageChange,
 }: GridListProps) {
   return (
-    <div className='grid-list absolute flex-row'>
-      <GridItem items={items} onItemClick={onItemClick} />
-      {totalPages > 1 && ( // display pagination only if there is more than one page
+    <div className='grid-list'>
+      <div className='grid grid-cols-5 gap-4 mb-4'>
+        {items.slice(0, 5).map((item) => (
+          <GridItem key={item._id} item={item} onItemClick={onItemClick} />
+        ))}
+      </div>
+      <div className='grid grid-cols-5 gap-4'>
+        {items.slice(5, 10).map((item) => (
+          <GridItem key={item._id} item={item} onItemClick={onItemClick} />
+        ))}
+      </div>
+      {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -34,9 +43,3 @@ function GridList({
 }
 
 export default GridList;
-
-//1.X make clickable (with a link) the element of your choice (either the whole div, or just the image), by wrapping it in a Link element (from react router) https://reactrouter.com/en/main/components/link
-//2.inside <SingleRecipe/> grab the recipeId from the URL ,store it in a variable with useParams() hook from react router https://reactrouter.com/en/main/hooks/use-params
-//3. Inside <SingleRecipe/> build a fetch function that makes a fetch request to your backend end point, using the variable you created storing the parameter from the url.
-//4. Create a state variable to store the recipe coming from your API.
-//5. Build your JSX code to render the recipe.

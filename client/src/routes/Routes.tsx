@@ -3,8 +3,9 @@ import Home from '../pages/Home';
 import Recipes from '../pages/Recipes';
 import SingleRecipe from '../pages/SingleRecipe';
 import TestReact from '../components/foo/TestReact';
-// import Login from '../../pages/login/Login';
+import Login from '../pages/Login';
 import Logout from '../pages/Logout';
+import SignUp from '../pages/SignUp';
 // import SignUp from '../../pages/sign-up/SignUp';
 // import NotFound from '../../pages/not-found/NotFound';
 // import CreateRecipe from '../../pages/create-recipe/CreateRecipe';
@@ -14,9 +15,9 @@ const Routes = () => {
   return (
     <RouterRoutes>
       <Route path='/' element={<Home />} />
-      {/* <Route path='/login' element={<Login />} /> */}
+      <Route path='/login' element={<Login />} />
       <Route path='/logout' element={<Logout />} />
-      {/* <Route path='/signup' element={<SignUp />} /> */}
+      <Route path='/signup' element={<SignUp />} />
       <Route
         path='/recipes'
         element={

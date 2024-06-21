@@ -1,37 +1,44 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
-// Define the AuthContextType interface with the following properties:
 interface AuthContextType {
   isAuthenticated: boolean;
+  login: (username: string, password: string) => void;
   logout: () => void;
+  setError: (error: string) => void;
+  error: string | null;
 }
 
-// Create the AuthContext context with the AuthContextType interface as the type argument.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Define the AuthProvider component with the following properties (do not use ever React.FC):
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Start with false for login
+  const [error, setError] = useState<string | null>(null); // Add error state
 
-  // Create a logout function that sets isAuthenticated to false.
+  const login = (username: string, password: string) => {
+    // Implement your login logic here
+    console.log(
+      `Logging in with username: ${username} and password: ${password}`
+    );
+    setIsAuthenticated(true); // Update based on your logic
+    setError(null); // Clear any previous errors
+  };
+
   const logout = () => {
     setIsAuthenticated(false);
     console.log('Logging out...');
   };
 
-  // Return the AuthContext.Provider component with the value prop set to an object
-  // with the isAuthenticated and logout properties.
   return (
-    <AuthContext.Provider value={{ isAuthenticated, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, logout, setError, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Define the useAuth hook that returns the AuthContext context.
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  // Throw an error if the useAuth hook is used outside of an AuthProvider component.
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

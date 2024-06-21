@@ -5,6 +5,7 @@ import FlowFooter from './components/Footer';
 import DesktopImage from './assets/dim-spices.png';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes/Routes';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,24 +21,21 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <div
-        className='relative h-screen bg-cover bg-center flex flex-col min-h-screen saturate-100'
-        style={{ backgroundImage: `url(${DesktopImage})` }}
-      >
-        <div className='fixed'></div>
-        <Navbar />
-        <div className='flex-grow'>
-          Your main content goes here
-          <div>
-            {/* <h1>Welcome to My Website</h1> */}
+    <AuthProvider>
+      <Router>
+        <div
+          className='relative h-screen bg-cover bg-center flex flex-col min-h-screen saturate-100'
+          style={{ backgroundImage: `url(${DesktopImage})` }}
+        >
+          <div className='fixed'></div>
+          <Navbar />
+          <div className='flex-grow'>
             <Routes />
-            {/* <p className='mt-4'>This is the content of the page.</p> */}
           </div>
+          <FlowFooter />
         </div>
-        <FlowFooter />
-      </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 

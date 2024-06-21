@@ -39,33 +39,29 @@ function SingleRecipe() {
   }
 
   return (
-    <main className='min-h-screen -my-24 flex justify-center items-center bg-eggshell'>
-      <article className='bg-white my-4 rounded-3xl w-1/2 flex flex-col md:flex-row'>
+    <main className='min-h-screen -mt-16 flex justify-center items-center bg-eggshell'>
+      <article className='bg-white rounded-3xl w-1/2 flex flex-col md:flex-row'>
         <div className='md:w-1/2 flex justify-center items-center p-4'>
           <img
             src={recipe.imageUrl}
             alt={`Photo of ${recipe.name}`}
-            className='max-w-full h-auto rounded-3xl'
+            className='max-w-full h-auto rounded-2xl'
           />
         </div>
         <div className='px-8 py-4 font-outfit text-wenge-brown md:w-1/2'>
-          <h1 className='font-fancy text-4xl mt-8 text-dark-charcoal'>
+          <h1 className='font-fancy text-3xl mt-8 text-dark-charcoal'>
             {recipe.name}
           </h1>
           <p className='mt-6'>Origin: {recipe.origin}</p>
           <article className='bg-rose-white mt-6 p-5 rounded-xl'>
-            <h2 className='text-dark-raspberry text-xl font-semibold ml-2'>
-              Difficulty
-            </h2>
+            <h2 className='text-dark-raspberry text-xl ml-2'>Difficulty</h2>
             <p className='ml-8 text-lg'>{recipe.difficulty}</p>
             <div className='w-full h-px bg-light-gray mx-auto mt-3'></div>
-            <h2 className='text-dark-raspberry text-xl font-semibold ml-2 mt-6'>
-              Likes
-            </h2>
+            <h2 className='text-dark-raspberry text-xl ml-2 mt-6'>Likes</h2>
             <p className='ml-8 text-lg'>{recipe.likes}</p>
           </article>
           <div className='mt-8'>
-            <h3 className='font-fancy text-3xl text-nutmeg'>Ingredients</h3>
+            <h3 className='font-fancy text-2xl text-nutmeg'>Ingredients</h3>
             <ul className='list-disc marker:text-nutmeg mt-4 ml-6 text-wenge-brown marker:align-middle'>
               {recipe.ingredients.map((ingredient, index) => (
                 <li className='pl-4 mt-2' key={index}>
@@ -76,7 +72,7 @@ function SingleRecipe() {
           </div>
           <div className='w-full h-px bg-light-gray mx-auto mt-8'></div>
           <div className='mt-8'>
-            <h3 className='font-fancy text-3xl text-nutmeg'>Instructions</h3>
+            <h3 className='font-fancy text-2xl text-nutmeg'>Instructions</h3>
             <p className='mt-4 ml-6'>{recipe.instructions}</p>
           </div>
         </div>

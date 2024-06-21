@@ -17,7 +17,7 @@ function SearchBar({ handleSearch, setSearchTerm }: SearchBarProps) {
   }
 
   return (
-    <form className='max-w-xl mx-auto my-auto' onSubmit={handleSubmit}>
+    <form className='max-w-xl mx-auto my-10' onSubmit={handleSubmit}>
       <div className='flex'>
         <button
           id='dropdown-button'

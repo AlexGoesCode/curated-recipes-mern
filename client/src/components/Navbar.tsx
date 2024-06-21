@@ -1,15 +1,14 @@
-//* Navbar from Tailwind UI
 import { Fragment } from 'react';
-
+import { useAuth } from '../context/AuthContext';
 import {
   Disclosure,
+  Menu,
+  Transition,
   DisclosureButton,
   DisclosurePanel,
-  Menu,
   MenuButton,
   MenuItem,
   MenuItems,
-  Transition,
 } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
@@ -18,7 +17,7 @@ const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Recipes', href: '/recipes', current: false },
   { name: 'Create Recipe', href: '/create-recipe', current: false },
-  { name: 'Calendar', href: 'CHANGE!!!!', current: false }, //* TO BE CHANGED !!!
+  { name: 'Calendar', href: 'CHANGE!!!!', current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -26,6 +25,8 @@ function classNames(...classes: string[]) {
 }
 
 const Navbar = () => {
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <Disclosure as='nav' className='bg-gray-700 bg-opacity-85'>
       {({ open }) => (
@@ -98,45 +99,50 @@ const Navbar = () => {
                     leaveTo='transform opacity-0 scale-95'
                   >
                     <MenuItems className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                      <MenuItem>
-                        {({ focus }) => (
-                          <a
-                            href='#'
-                            className={classNames(
-                              focus ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
+                      {isAuthenticated ? (
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={logout}
+                              className={classNames(
+                                active ? 'bg-gray-100' : '',
+                                'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                              )}
+                            >
+                              Sign out
+                            </button>
+                          )}
+                        </MenuItem>
+                      ) : (
+                        <>
+                          <MenuItem>
+                            {({ active }) => (
+                              <Link
+                                to='/login'
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Sign in
+                              </Link>
                             )}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ focus }) => (
-                          <a
-                            href='#'
-                            className={classNames(
-                              focus ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
+                          </MenuItem>
+                          <MenuItem>
+                            {({ active }) => (
+                              <Link
+                                to='/signup'
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Sign up
+                              </Link>
                             )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ focus }) => (
-                          <a
-                            href='#'
-                            className={classNames(
-                              focus ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
-                            )}
-                          >
-                            Sign out
-                          </a>
-                        )}
-                      </MenuItem>
+                          </MenuItem>
+                        </>
+                      )}
                     </MenuItems>
                   </Transition>
                 </Menu>
