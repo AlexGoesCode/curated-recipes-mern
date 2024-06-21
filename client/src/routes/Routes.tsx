@@ -6,9 +6,8 @@ import TestReact from '../components/foo/TestReact';
 import Login from '../pages/Login';
 import Logout from '../pages/Logout';
 import SignUp from '../pages/SignUp';
-// import SignUp from '../../pages/sign-up/SignUp';
 // import NotFound from '../../pages/not-found/NotFound';
-// import CreateRecipe from '../../pages/create-recipe/CreateRecipe';
+import CreateRecipe from '../pages/CreateRecipe';
 // import ProtectedRoute from '../protected-route/ProtectedRoute';
 
 const Routes = () => {
@@ -42,14 +41,14 @@ const Routes = () => {
           //   </ProtectedRoute>
         }
       />
-      {/* <Route
+      <Route
         path='/create-recipe'
         element={
-           <ProtectedRoute>
-             <CreateRecipe />
-           </ProtectedRoute>
-         }
-      /> */}
+          //  <ProtectedRoute>
+          <CreateRecipe />
+          //  </ProtectedRoute>
+        }
+      />
       {/* <Route path='*' element={<NotFound />} /> */}
     </RouterRoutes>
   );
