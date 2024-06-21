@@ -15,15 +15,13 @@ const recipeSchema = new Schema({
   },
   diet: {
     type: String,
-    required: true,
-    unique: false,
+    enum: ['none', 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'],
   },
   countryOrigin: {
     type: String,
     required: false,
     unique: false,
   },
-
   ingredients: {
     type: [String],
     required: true,
@@ -31,10 +29,6 @@ const recipeSchema = new Schema({
   instructions: {
     type: String,
     required: true,
-  },
-  time: {
-    type: Number,
-    required: false,
   },
   likes: {
     type: Number,

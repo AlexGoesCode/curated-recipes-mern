@@ -2,34 +2,48 @@ import { useState } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthLayout from '../components/AuthLayout';
+import { Recipe } from '../types/Types';
 
 const CreateRecipe = () => {
-  const [name, setName] = useState('');
-  const [origin, setOrigin] = useState('');
-  const [ingredients, setIngredients] = useState(['']);
-  const [instructions, setInstructions] = useState('');
-  const [difficulty, setDifficulty] = useState('easy');
-  const [imageUrl, setImageUrl] = useState('');
+  const [recipe, setRecipe] = useState<Recipe>({
+    _id: '',
+    name: '',
+    origin: '',
+    diet: 'none',
+    difficulty: 'easy',
+    imageUrl: '',
+    ingredients: [''],
+    instructions: '',
+    likes: 0,
+  });
+
   const { setError, error } = useAuth();
   const navigate: NavigateFunction = useNavigate();
 
   const handleIngredientChange = (index: number, value: string) => {
-    const newIngredients = [...ingredients];
+    const newIngredients = [...recipe.ingredients];
     newIngredients[index] = value;
-    setIngredients(newIngredients);
+    setRecipe({ ...recipe, ingredients: newIngredients });
   };
 
   const addIngredient = () => {
-    setIngredients([...ingredients, '']);
+    setRecipe({ ...recipe, ingredients: [...recipe.ingredients, ''] });
   };
 
   const removeIngredient = (index: number) => {
-    const newIngredients = ingredients.filter((_, i) => i !== index);
-    setIngredients(newIngredients);
+    const newIngredients = recipe.ingredients.filter((_, i) => i !== index);
+    setRecipe({ ...recipe, ingredients: newIngredients });
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    const recipeData = {
+      ...recipe,
+    };
+
+    console.log('Submitting recipe:', recipeData);
+
     try {
       const response = await fetch(
         'http://localhost:5022/api/curated-recipes',
@@ -38,24 +52,23 @@ const CreateRecipe = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            name,
-            origin,
-            ingredients,
-            instructions,
-            difficulty,
-            imageUrl,
-          }),
+          body: JSON.stringify(recipeData),
         }
       );
+
+      console.log('Response received', response);
 
       if (!response.ok) {
         throw new Error('Failed to create recipe');
       }
 
-      // Redirect to the recipe list page or show a success message
+      const result = await response.json();
+      console.log('Recipe created', result);
+
       navigate('/recipes');
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error;
+      console.error('Error occurred', error);
       setError(error.message);
     }
   };
@@ -65,7 +78,7 @@ const CreateRecipe = () => {
       title='Create a New Recipe'
       buttonText='Create Recipe'
       onButtonClick={handleSubmit}
-      showSignupLink={false} // Add this prop to hide the "Not a member?" link
+      showSignupLink={false}
     >
       <div className='space-y-2 -mt-5'>
         <div>
@@ -81,8 +94,8 @@ const CreateRecipe = () => {
               name='name'
               type='text'
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={recipe.name}
+              onChange={(e) => setRecipe({ ...recipe, name: e.target.value })}
               className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
           </div>
@@ -101,10 +114,37 @@ const CreateRecipe = () => {
               name='origin'
               type='text'
               required
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
+              value={recipe.origin}
+              onChange={(e) => setRecipe({ ...recipe, origin: e.target.value })}
               className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
+          </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor='diet'
+            className='block text-sm font-medium leading-6 text-gray-100'
+          >
+            Diet Type
+          </label>
+          <div className='mt-2'>
+            <select
+              id='diet'
+              name='diet'
+              required
+              value={recipe.diet}
+              onChange={(e) =>
+                setRecipe({ ...recipe, diet: e.target.value as Recipe['diet'] })
+              }
+              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            >
+              <option value='none'>None</option>
+              <option value='vegetarian'>Vegetarian</option>
+              <option value='vegan'>Vegan</option>
+              <option value='gluten-free'>Gluten-Free</option>
+              <option value='dairy-free'>Dairy-Free</option>
+            </select>
           </div>
         </div>
 
@@ -116,7 +156,7 @@ const CreateRecipe = () => {
             Ingredients
           </label>
           <div className='mt-2 space-y-2'>
-            {ingredients.map((ingredient, index) => (
+            {recipe.ingredients.map((ingredient, index) => (
               <div key={index} className='flex items-center space-x-2'>
                 <input
                   type='text'
@@ -158,8 +198,10 @@ const CreateRecipe = () => {
               name='instructions'
               rows={4}
               required
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
+              value={recipe.instructions}
+              onChange={(e) =>
+                setRecipe({ ...recipe, instructions: e.target.value })
+              }
               className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
           </div>
@@ -177,8 +219,13 @@ const CreateRecipe = () => {
               id='difficulty'
               name='difficulty'
               required
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
+              value={recipe.difficulty}
+              onChange={(e) =>
+                setRecipe({
+                  ...recipe,
+                  difficulty: e.target.value as Recipe['difficulty'],
+                })
+              }
               className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             >
               <option value='easy'>Easy</option>
@@ -201,8 +248,10 @@ const CreateRecipe = () => {
               name='imageUrl'
               type='text'
               required
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              value={recipe.imageUrl}
+              onChange={(e) =>
+                setRecipe({ ...recipe, imageUrl: e.target.value })
+              }
               className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>

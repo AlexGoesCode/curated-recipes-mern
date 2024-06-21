@@ -13,6 +13,16 @@ const allRecipes = async (req, res) => {
   }
 };
 
+export const createRecipe = async (req, res) => {
+  try {
+    const newRecipe = new RecipeModel(req.body);
+    const savedRecipe = await newRecipe.save();
+    res.status(201).json(savedRecipe);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const recipesByIngredient = async (req, res) => {
   // console.log('req :>> '.bgYellow, req);
   // try {

@@ -11,7 +11,6 @@ dotenv.config();
 
 const addMiddlewares = (app) => {
   // adds middleware to the application
-  // const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
@@ -35,6 +34,10 @@ const DBConnection = async () => {
   // connects to the database
   try {
     await mongoose.connect(process.env.MONGO_DB);
+    {
+      useNewUrlParser: true;
+      useUnifiedTopology: true;
+    }
     console.log('connection with MongoDB established'.bgGreen);
   } catch (error) {
     console.log('problems connecting to MongoDB'.bgRed, error);

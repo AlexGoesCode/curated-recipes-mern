@@ -53,12 +53,27 @@ function SingleRecipe() {
             {recipe.name}
           </h1>
           <p className='mt-6'>Origin: {recipe.origin}</p>
+          <p className='mt-6'>Diet: {recipe.diet}</p> {/* Added diet type */}
           <article className='bg-rose-white mt-6 p-5 rounded-xl'>
             <h2 className='text-dark-raspberry text-xl ml-2'>Difficulty</h2>
             <p className='ml-8 text-lg'>{recipe.difficulty}</p>
             <div className='w-full h-px bg-light-gray mx-auto mt-3'></div>
             <h2 className='text-dark-raspberry text-xl ml-2 mt-6'>Likes</h2>
-            <p className='ml-8 text-lg'>{recipe.likes}</p>
+            <div className='ml-8 flex items-center text-lg'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='red'
+                className='w-6 h-6 mr-2'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              {recipe.likes}
+            </div>
           </article>
           <div className='mt-8'>
             <h3 className='font-fancy text-2xl text-nutmeg'>Ingredients</h3>

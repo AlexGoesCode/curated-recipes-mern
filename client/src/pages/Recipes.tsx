@@ -5,37 +5,34 @@ import GridItem from '../components/GridItem';
 import { Recipe } from '../types/Types';
 
 const Recipes = () => {
-  // const [searchQuery, setSearchQuery] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchBy, setSearchBy] = useState('name'); // Add this state
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  // Fetch data based on searchQuery and currentPage
+
+  // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
     const response = await fetch(
-      `http://localhost:5022/api/curated-recipes/recipesbyingredients?ingredients=${searchTerm}&page=${currentPage}`
+      `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}`
     );
     const data = await response.json();
     console.log('data :>> ', data);
     setItems(data);
     setTotalPages(data.totalPages);
   };
-  // useEffect(() => {
-
-  //   fetchData();
-  // }, [searchQuery, currentPage]);
 
   const handleSearch = () => {
-    // setSearchQuery(query);
     fetchData();
     setCurrentPage(1); // Reset to the first page on a new search
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    fetchData();
   };
 
-  const handleItemClick = (item: GridItem) => {
+  const handleItemClick = (item) => {
     // Handle item click (e.g., navigate to a details page)
     console.log('Item clicked:', item);
   };
@@ -43,7 +40,11 @@ const Recipes = () => {
   return (
     <div>
       <div>
-        <SearchBar handleSearch={handleSearch} setSearchTerm={setSearchTerm} />
+        <SearchBar
+          handleSearch={handleSearch}
+          setSearchTerm={setSearchTerm}
+          setSearchBy={setSearchBy} // Add this prop
+        />
       </div>
       <div>
         <GridList
