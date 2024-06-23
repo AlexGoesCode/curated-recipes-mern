@@ -1,31 +1,21 @@
-import express, { response } from 'express';
-import RecipeModel from '../models/Model.js'; //! .js
+import express from 'express';
+import RecipeModel from '../models/Model.js';
 import {
   allRecipes,
   getRecipeById,
   getRecipesByIngredients,
-  recipesByIngredient,
+  getRecipesByName,
+  getRecipesByDiet,
   createRecipe,
-} from '../controller/controller.js'; //! .js
+} from '../controller/controller.js';
 
-const recipesRouter = express.Router(); // creates a new router object
+const recipesRouter = express.Router();
 
-recipesRouter.get('/all', allRecipes); // endpoint and controller
-recipesRouter.get('/recipesbyingredients', getRecipesByIngredients); // endpoint and controller
-recipesRouter.get('/:recipeid', getRecipeById); // endpoint and controller
-recipesRouter.get('/:ingredients', recipesByIngredient); // endpoint and controller
+recipesRouter.get('/all', allRecipes);
+recipesRouter.get('/recipesbyname', getRecipesByName); // Endpoint for searching by name
+recipesRouter.get('/recipesbyingredients', getRecipesByIngredients); // Endpoint for searching by ingredients
+recipesRouter.get('/recipesbydiet', getRecipesByDiet); // Endpoint for searching by diet
+recipesRouter.get('/:recipeid', getRecipeById);
 recipesRouter.post('/', createRecipe);
-
-recipesRouter.post('/', async (req, res) => {
-  try {
-    console.log('Received data:', req.body);
-    const newRecipe = new RecipeModel(req.body);
-    const savedRecipe = await newRecipe.save();
-    res.status(201).json(savedRecipe);
-  } catch (error) {
-    console.error('Error saving recipe:', error.message); // Add this line to log errors
-    res.status(400).json({ error: error.message });
-  }
-});
 
 export default recipesRouter;
