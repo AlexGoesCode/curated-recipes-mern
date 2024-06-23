@@ -18,7 +18,6 @@ const GridItem = ({ item, onItemClick }: GridItemProps) => {
           src={item.imageUrl}
           alt={item.name}
           className='w-full h-48 object-cover'
-          style={{ width: '130px' }}
         />
       </Link>
       <p style={{ color: 'white' }}>{item.name}</p>

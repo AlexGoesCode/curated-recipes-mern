@@ -53,7 +53,7 @@ function SingleRecipe() {
             {recipe.name}
           </h1>
           <p className='mt-6'>Origin: {recipe.origin}</p>
-          <p className='mt-6'>Diet: {recipe.diet}</p> {/* Added diet type */}
+          <p className='mt-6'>Diet: {recipe.diet}</p>
           <article className='bg-rose-white mt-6 p-5 rounded-xl'>
             <h2 className='text-dark-raspberry text-xl ml-2'>Difficulty</h2>
             <p className='ml-8 text-lg'>{recipe.difficulty}</p>

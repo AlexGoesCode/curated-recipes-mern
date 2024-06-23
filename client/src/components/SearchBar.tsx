@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface SearchBarProps {
   handleSearch: () => void;
   setSearchTerm: (term: string) => void;
-  setSearchBy: (option: 'name' | 'ingredients' | 'diet') => void; // Add this prop with specific union type
+  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void; // Add 'id' to the union type
 }
 
 function SearchBar({
@@ -13,8 +13,8 @@ function SearchBar({
 }: SearchBarProps) {
   const [term, setTerm] = useState('');
   const [searchOption, setSearchOption] = useState<
-    'name' | 'ingredients' | 'diet'
-  >('name'); // Use a specific union type for searchOption
+    'name' | 'ingredients' | 'diet' | 'id'
+  >('name'); // Add 'id' to the union type
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -27,8 +27,10 @@ function SearchBar({
   }
 
   function handleOptionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    setSearchOption(event.target.value as 'name' | 'ingredients' | 'diet'); // Cast to specific union type
-    setSearchBy(event.target.value as 'name' | 'ingredients' | 'diet');
+    setSearchOption(
+      event.target.value as 'name' | 'ingredients' | 'diet' | 'id'
+    ); // Cast to specific union type
+    setSearchBy(event.target.value as 'name' | 'ingredients' | 'diet' | 'id');
   }
 
   return (
@@ -43,6 +45,7 @@ function SearchBar({
           <option value='name'>Name</option>
           <option value='ingredients'>Ingredients</option>
           <option value='diet'>Diet</option>
+          <option value='id'>ID</option>
         </select>
         <input
           type='search'
