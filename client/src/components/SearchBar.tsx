@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface SearchBarProps {
   handleSearch: () => void;
   setSearchTerm: (term: string) => void;
-  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void; // Add 'id' to the union type
+  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void; // Add this prop with specific union type
 }
 
 function SearchBar({
@@ -14,7 +14,7 @@ function SearchBar({
   const [term, setTerm] = useState('');
   const [searchOption, setSearchOption] = useState<
     'name' | 'ingredients' | 'diet' | 'id'
-  >('name'); // Add 'id' to the union type
+  >('name'); // Use a specific union type for searchOption
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -27,10 +27,13 @@ function SearchBar({
   }
 
   function handleOptionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    setSearchOption(
-      event.target.value as 'name' | 'ingredients' | 'diet' | 'id'
-    ); // Cast to specific union type
-    setSearchBy(event.target.value as 'name' | 'ingredients' | 'diet' | 'id');
+    const selectedOption = event.target.value as
+      | 'name'
+      | 'ingredients'
+      | 'diet'
+      | 'id'; // Cast to specific union type
+    setSearchOption(selectedOption);
+    setSearchBy(selectedOption);
   }
 
   return (

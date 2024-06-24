@@ -30,6 +30,33 @@ function SingleRecipe() {
     }
   }, [recipeid]);
 
+  const handleLikeRecipe = async () => {
+    const url = `http://localhost:5022/api/curated-recipes/${recipeid}/like`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to like recipe');
+      }
+
+      const result = await response.json();
+      console.log('Recipe liked', result);
+
+      if (recipe) {
+        setRecipe({ ...recipe, likes: result.likes });
+      }
+    } catch (error) {
+      console.error('Error liking recipe:', error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
+  };
+
   if (error) {
     return <div style={{ color: 'white' }}>Error: {error}</div>;
   }
@@ -53,7 +80,7 @@ function SingleRecipe() {
             {recipe.name}
           </h1>
           <p className='mt-6'>Origin: {recipe.origin}</p>
-          <p className='mt-6'>Diet: {recipe.diet}</p>
+          <p className='mt-6'>Diet: {recipe.diet}</p> {/* Added diet type */}
           <article className='bg-rose-white mt-6 p-5 rounded-xl'>
             <h2 className='text-dark-raspberry text-xl ml-2'>Difficulty</h2>
             <p className='ml-8 text-lg'>{recipe.difficulty}</p>
@@ -65,6 +92,7 @@ function SingleRecipe() {
                 viewBox='0 0 24 24'
                 fill='red'
                 className='w-6 h-6 mr-2'
+                onClick={handleLikeRecipe} // Add onClick handler for liking the recipe
               >
                 <path
                   fillRule='evenodd'

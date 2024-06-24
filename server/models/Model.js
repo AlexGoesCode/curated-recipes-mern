@@ -16,6 +16,7 @@ const recipeSchema = new Schema({
   diet: {
     type: String,
     enum: ['none', 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'],
+    default: 'none',
   },
   countryOrigin: {
     type: String,

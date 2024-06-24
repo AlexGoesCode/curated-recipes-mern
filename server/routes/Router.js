@@ -5,17 +5,19 @@ import {
   getRecipeById,
   getRecipesByIngredients,
   getRecipesByName,
-  getRecipesByDiet,
+  getRecipesByDiet, // Import the getRecipesByDiet controller
   createRecipe,
+  likeRecipe,
 } from '../controller/controller.js';
 
 const recipesRouter = express.Router();
 
 recipesRouter.get('/all', allRecipes);
-recipesRouter.get('/recipesbyname', getRecipesByName); // Endpoint for searching by name
-recipesRouter.get('/recipesbyingredients', getRecipesByIngredients); // Endpoint for searching by ingredients
-recipesRouter.get('/recipesbydiet', getRecipesByDiet); // Endpoint for searching by diet
+recipesRouter.get('/recipesbyingredients', getRecipesByIngredients);
+recipesRouter.get('/recipesbyname', getRecipesByName);
+recipesRouter.get('/recipesbydiet', getRecipesByDiet); // Add the endpoint for searching recipes by diet
 recipesRouter.get('/:recipeid', getRecipeById);
 recipesRouter.post('/', createRecipe);
+recipesRouter.post('/:recipeid/like', likeRecipe);
 
 export default recipesRouter;

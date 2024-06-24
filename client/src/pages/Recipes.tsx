@@ -7,44 +7,24 @@ const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState<
     'name' | 'ingredients' | 'diet' | 'id'
-  >('name');
+  >('name'); // Include 'id' in the union type
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
-    let endpoint = '';
-    if (searchBy === 'name') {
-      endpoint = `http://localhost:5022/api/curated-recipes/recipesbyname?name=${searchTerm}&page=${currentPage}`;
-    } else if (searchBy === 'ingredients') {
-      endpoint = `http://localhost:5022/api/curated-recipes/recipesbyingredients?ingredients=${searchTerm}&page=${currentPage}`;
-    } else if (searchBy === 'diet') {
-      endpoint = `http://localhost:5022/api/curated-recipes/recipesbydiet?diet=${searchTerm}&page=${currentPage}`;
-    } else if (searchBy === 'id') {
-      endpoint = `http://localhost:5022/api/curated-recipes/${searchTerm}`;
-    }
-
-    try {
-      const response = await fetch(endpoint);
-      if (searchBy === 'id') {
-        const data = await response.json();
-        setItems([data.data]);
-        setTotalPages(1);
-      } else {
-        const data = await response.json();
-        setItems(data.recipes);
-        setTotalPages(data.totalPages);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+    const response = await fetch(
+      `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}`
+    );
+    const data = await response.json();
+    console.log('data :>> ', data);
+    setItems(data.recipes || []);
+    setTotalPages(data.totalPages || 1);
   };
 
   useEffect(() => {
-    if (searchTerm) {
-      fetchData();
-    }
+    fetchData();
   }, [searchTerm, searchBy, currentPage]);
 
   const handleSearch = () => {
@@ -67,12 +47,13 @@ const Recipes = () => {
         <SearchBar
           handleSearch={handleSearch}
           setSearchTerm={setSearchTerm}
-          setSearchBy={setSearchBy}
+          setSearchBy={setSearchBy} // Add this prop
         />
       </div>
       <div>
         <GridList
           items={items}
+          likedRecipes={[]} // Pass likedRecipes prop (add logic if needed)
           onItemClick={handleItemClick}
           totalPages={totalPages}
           currentPage={currentPage}

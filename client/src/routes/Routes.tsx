@@ -1,4 +1,4 @@
-import { Routes as RouterRoutes, Router, Route } from 'react-router-dom';
+import { Routes as RouterRoutes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Recipes from '../pages/Recipes';
 import SingleRecipe from '../pages/SingleRecipe';
@@ -8,6 +8,7 @@ import Logout from '../pages/Logout';
 import SignUp from '../pages/SignUp';
 // import NotFound from '../../pages/not-found/NotFound';
 import CreateRecipe from '../pages/CreateRecipe';
+import SavedRecipes from '../pages/SavedRecipes'; // Import the SavedRecipes component
 // import ProtectedRoute from '../protected-route/ProtectedRoute';
 
 const Routes = () => {
@@ -46,6 +47,14 @@ const Routes = () => {
         element={
           //  <ProtectedRoute>
           <CreateRecipe />
+          //  </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/saved-recipes'
+        element={
+          //  <ProtectedRoute>
+          <SavedRecipes />
           //  </ProtectedRoute>
         }
       />
