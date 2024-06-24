@@ -2,10 +2,11 @@ import RecipeModel from '../models/Model.js';
 
 const allRecipes = async (req, res) => {
   try {
-    const recipes = await RecipeModel.find({});
-    res.status(200).json({ recipes, totalPages: 1 });
+    const allRecipes = await RecipeModel.find({});
+    res.status(200).json({ number: allRecipes.length, allRecipes });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching recipes:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -19,71 +20,96 @@ const createRecipe = async (req, res) => {
   }
 };
 
-const getRecipesByIngredients = async (req, res) => {
+const getRecipesByName = async (req, res) => {
   try {
-    const { ingredients } = req.query;
+    const name = req.query.name;
     const recipes = await RecipeModel.find({
-      ingredients: { $elemMatch: { $in: ingredients.split(',') } },
+      name: { $regex: name, $options: 'i' },
     });
-    res.status(200).json({ recipes, totalPages: 1 });
+    if (recipes.length) {
+      res.status(200).json(recipes);
+    } else {
+      res.status(404).json({ message: 'No recipes found with that name' });
+    }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching recipes by name:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-const getRecipesByName = async (req, res) => {
+const getRecipesByIngredients = async (req, res) => {
+  const ingredient = req.query.ingredients;
   try {
-    const { name } = req.query;
-    const recipes = await RecipeModel.find({ name: new RegExp(name, 'i') });
-    res.status(200).json({ recipes, totalPages: 1 });
+    const recipesArray = await RecipeModel.find({
+      ingredients: { $elemMatch: { $in: ingredient } },
+    });
+    res.status(200).json(recipesArray);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log('Error fetching recipes:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const getRecipesByDiet = async (req, res) => {
+  const diet = req.query.diet;
   try {
-    const { diet } = req.query;
-    const recipes = await RecipeModel.find({ diet: new RegExp(diet, 'i') });
-    res.status(200).json({ recipes, totalPages: 1 });
+    const recipesArray = await RecipeModel.find({ diet });
+    res.status(200).json(recipesArray);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log('Error fetching recipes:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const getRecipeById = async (req, res) => {
   try {
-    const { recipeid } = req.params;
-    const recipe = await RecipeModel.findById(recipeid);
+    const recipeId = req.params.recipeid;
+    const recipe = await RecipeModel.findById(recipeId);
     if (!recipe) {
-      return res.status(404).json({ error: 'Recipe not found' });
+      res.status(404).json({
+        message: 'No recipes with this ID',
+        data: null,
+        error: false,
+      });
+      return;
     }
-    res.status(200).json({ data: recipe, error: false });
+    res.status(200).json({
+      message: 'Recipe found',
+      data: recipe,
+      error: false,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      message: 'Something went wrong',
+      data: null,
+      error: true,
+    });
   }
 };
 
 const likeRecipe = async (req, res) => {
   try {
-    const { recipeid } = req.params;
-    const recipe = await RecipeModel.findById(recipeid);
+    const recipeId = req.params.recipeid;
+    const recipe = await RecipeModel.findByIdAndUpdate(
+      recipeId,
+      { $inc: { likes: 1 } },
+      { new: true }
+    );
     if (!recipe) {
-      return res.status(404).json({ error: 'Recipe not found' });
+      res.status(404).json({ message: 'Recipe not found' });
+      return;
     }
-    recipe.likes = (recipe.likes || 0) + 1;
-    await recipe.save();
-    res.status(200).json({ data: recipe, error: false });
+    res.status(200).json(recipe);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: 'Failed to like recipe' });
   }
 };
 
 export {
   allRecipes,
   createRecipe,
-  getRecipesByIngredients,
   getRecipesByName,
+  getRecipesByIngredients,
   getRecipesByDiet,
   getRecipeById,
   likeRecipe,

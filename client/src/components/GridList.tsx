@@ -19,6 +19,9 @@ function GridList({
   currentPage,
   handlePageChange,
 }: GridListProps) {
+  console.log('Rendering GridList with items:', items); // Debug log
+  console.log('Total items:', items.length); // Additional log for item count
+
   return (
     <div className='grid-list'>
       <div className='grid grid-cols-5 gap-4 mb-4'>
