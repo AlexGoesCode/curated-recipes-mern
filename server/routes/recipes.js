@@ -1,5 +1,4 @@
 import express from 'express';
-import RecipeModel from '../models/Model.js';
 import {
   allRecipes,
   getRecipeById,
@@ -8,7 +7,8 @@ import {
   getRecipesByDiet,
   createRecipe,
   likeRecipe,
-} from '../controller/controller.js';
+} from '../controllers/recipesController.js';
+import authMiddleware from '../middleware/auth.js';
 
 const recipesRouter = express.Router();
 
@@ -18,6 +18,6 @@ recipesRouter.get('/recipesbyname', getRecipesByName);
 recipesRouter.get('/recipesbydiet', getRecipesByDiet);
 recipesRouter.get('/:recipeid', getRecipeById);
 recipesRouter.post('/', createRecipe);
-recipesRouter.post('/:recipeid/like', likeRecipe);
+recipesRouter.post('/:recipeid/like', authMiddleware, likeRecipe);
 
 export default recipesRouter;

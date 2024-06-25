@@ -1,4 +1,5 @@
-import RecipeModel from '../models/Model.js';
+import RecipeModel from '../models/recipe';
+import Like from '../models/Like.js';
 
 const allRecipes = async (req, res) => {
   try {
@@ -88,20 +89,27 @@ const getRecipeById = async (req, res) => {
 };
 
 const likeRecipe = async (req, res) => {
+  const { userId, recipeId } = req.body;
+
   try {
-    const recipeId = req.params.recipeid;
-    const recipe = await RecipeModel.findByIdAndUpdate(
-      recipeId,
-      { $inc: { likes: 1 } },
-      { new: true }
-    );
-    if (!recipe) {
-      res.status(404).json({ message: 'Recipe not found' });
-      return;
+    // Check if the user has already liked the recipe
+    const existingLike = await Like.findOne({ userId, recipeId });
+    if (existingLike) {
+      return res
+        .status(400)
+        .json({ message: 'You have already liked this recipe' });
     }
-    res.status(200).json(recipe);
+
+    // Create a new like
+    const like = new Like({ userId, recipeId });
+    await like.save();
+
+    // Increment the recipe's like count
+    await Recipe.findByIdAndUpdate(recipeId, { $inc: { likes: 1 } });
+
+    res.status(200).json({ message: 'Recipe liked successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to like recipe' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

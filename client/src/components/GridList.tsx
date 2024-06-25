@@ -1,3 +1,4 @@
+// components/GridList.tsx
 import { Recipe } from '../types/Types';
 import GridItem from './GridItem';
 import Pagination from './Pagination';

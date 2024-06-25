@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
+import { fetchUserLikes } from '../api/User';
 import { Recipe } from '../types/Types';
 
 const Recipes = () => {
@@ -11,6 +12,7 @@ const Recipes = () => {
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userLikes, setUserLikes] = useState<string[]>([]); // Add state for user likes
 
   // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
@@ -44,6 +46,15 @@ const Recipes = () => {
     fetchData();
   }, [searchTerm, searchBy, currentPage]);
 
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const likes = await fetchUserLikes(token); // Fetch user likes
+      setUserLikes(likes);
+    };
+
+    fetchLikes();
+  }, []);
+
   const handleSearch = () => {
     setCurrentPage(1); // Reset to the first page on a new search
     fetchData();
@@ -72,7 +83,7 @@ const Recipes = () => {
       <div>
         <GridList
           items={items}
-          likedRecipes={[]}
+          likedRecipes={userLikes} // Pass the liked recipes array
           onItemClick={handleItemClick}
           totalPages={totalPages}
           currentPage={currentPage}
