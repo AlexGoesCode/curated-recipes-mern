@@ -3,6 +3,7 @@ import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
 import { fetchUserLikes } from '../api/User';
 import { Recipe } from '../types/Types';
+import { useAuth } from '../context/AuthContext';
 
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +13,8 @@ const Recipes = () => {
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [userLikes, setUserLikes] = useState<string[]>([]); // Add state for user likes
+  const [userLikes, setUserLikes] = useState<string[]>([]);
+  const { token } = useAuth();
 
   // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
@@ -48,12 +50,14 @@ const Recipes = () => {
 
   useEffect(() => {
     const fetchLikes = async () => {
-      const likes = await fetchUserLikes(token); // Fetch user likes
-      setUserLikes(likes);
+      if (token) {
+        const likes = await fetchUserLikes(token); // Fetch user likes
+        setUserLikes(likes);
+      }
     };
 
     fetchLikes();
-  }, []);
+  }, [token]);
 
   const handleSearch = () => {
     setCurrentPage(1); // Reset to the first page on a new search
