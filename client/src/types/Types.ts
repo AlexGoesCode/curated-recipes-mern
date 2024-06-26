@@ -1,6 +1,6 @@
 export type Recipe = {
   _id: string;
-  name: string; // It's always available, so no need to make it optional
+  name: string; // always available, no need to make it optional
   origin: string;
   ingredients: string[];
   instructions: string;

@@ -4,11 +4,13 @@ import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { setError, error } = useAuth(); // Get error handling from context
 
   const handleSignUp = async () => {
+    console.log('username :>> ', username, password);
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -21,6 +23,32 @@ const SignUp = () => {
     console.log(
       `Signing up with username: ${username} and password: ${password}`
     );
+
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    const urlencoded = new URLSearchParams();
+    // urlencoded.append('name', username);
+    urlencoded.append('email', email);
+    urlencoded.append('password', password);
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+    };
+    try {
+      const response = await fetch(
+        'http://localhost:5022/api/user/register',
+        requestOptions
+      );
+      //do some error handling here : if response.ok is not Ok
+      //if repsonse.ok is  true then we transform the response to json
+      const result = await response.json();
+      console.log('result :>> ', result);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
   };
 
   return (
@@ -43,9 +71,9 @@ const SignUp = () => {
             type='email'
             autoComplete='email'
             required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>
@@ -68,7 +96,7 @@ const SignUp = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>
@@ -91,7 +119,7 @@ const SignUp = () => {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-100 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>

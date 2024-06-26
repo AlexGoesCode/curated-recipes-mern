@@ -122,7 +122,7 @@ const Navbar = () => {
                                   'block w-full text-left px-4 py-2 text-sm text-gray-700'
                                 )}
                               >
-                                Sign in
+                                Log-in
                               </Link>
                             )}
                           </MenuItem>

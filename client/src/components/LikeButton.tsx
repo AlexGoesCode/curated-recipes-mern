@@ -1,13 +1,18 @@
-// components/LikeButton.tsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface LikeButtonProps {
   recipeId: string;
   userId: string;
   likedRecipes: string[];
+  onLike: (recipeId: string) => void; // Add onLike prop
 }
 
-const LikeButton = ({ recipeId, userId, likedRecipes }: LikeButtonProps) => {
+const LikeButton = ({
+  recipeId,
+  userId,
+  likedRecipes,
+  onLike,
+}: LikeButtonProps) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -24,13 +29,14 @@ const LikeButton = ({ recipeId, userId, likedRecipes }: LikeButtonProps) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Add your auth token here
+          Authorization: `Bearer your-auth-token`, // Add your auth token here
         },
         body: JSON.stringify({ userId, recipeId }),
       });
 
       if (response.ok) {
         setLiked(true);
+        onLike(recipeId); // Call onLike prop
       } else {
         const data = await response.json();
         console.error(data.message);

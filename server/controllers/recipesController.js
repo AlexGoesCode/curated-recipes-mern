@@ -1,5 +1,6 @@
-import RecipeModel from '../models/recipe';
+import RecipeModel from '../models/Recipe.js';
 import Like from '../models/Like.js';
+import Recipe from '../models/Recipe.js';
 
 const allRecipes = async (req, res) => {
   try {
@@ -93,21 +94,39 @@ const likeRecipe = async (req, res) => {
 
   try {
     // Check if the user has already liked the recipe
-    const existingLike = await Like.findOne({ userId, recipeId });
-    if (existingLike) {
+    const recipeToLike = await Recipe.findOne({ _id: recipeId });
+    const isRecipeLiked = recipeToLike.likes.includes(userId) ? true : false;
+    if (isRecipeLiked) {
       return res
         .status(400)
         .json({ message: 'You have already liked this recipe' });
     }
 
     // Create a new like
-    const like = new Like({ userId, recipeId });
-    await like.save();
+    const addLikeToRecipe = await Recipe.findByIdAndUpdate(
+      recipeId,
+      {
+        $addToSet: { likes: userId },
+      },
+      { new: true }
+    );
 
-    // Increment the recipe's like count
-    await Recipe.findByIdAndUpdate(recipeId, { $inc: { likes: 1 } });
+    console.log('addLikeToRecipe :>> ', addLikeToRecipe);
 
     res.status(200).json({ message: 'Recipe liked successfully' });
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+const getUserLikes = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming the auth middleware sets req.user
+
+    const likes = await Like.find({ userId }).populate('recipeId');
+    const likedRecipeIds = likes.map((like) => like.recipeId._id);
+
+    res.status(200).json({ likes: likedRecipeIds });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -121,4 +140,5 @@ export {
   getRecipesByDiet,
   getRecipeById,
   likeRecipe,
+  getUserLikes,
 };
