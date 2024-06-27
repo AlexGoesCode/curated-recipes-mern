@@ -12,11 +12,19 @@ export type Recipe = {
 
 export type UserType = {
   email: string;
-  uid: string;
+  username: string;
+  likedRecipes: Recipe[];
+  id: string;
 };
 
 export type SingleRecipeOkResponse = {
   error: boolean;
   message: string;
   data: Recipe;
+};
+
+export type LoginResponse = {
+  message: string;
+  user: UserType;
+  token: string;
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
-import { fetchUserLikes } from '../api/User';
+import { fetchUserLikes } from '../api/user';
 import { Recipe } from '../types/Types';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,22 +23,18 @@ const Recipes = () => {
         `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}`
       );
       const data = await response.json();
-      console.log('data :>> ', data);
+      console.log('Fetched data:', data);
 
-      // Check if the data contains the recipes array or is an array itself
       if (Array.isArray(data)) {
-        console.log('Setting items with data:', data);
-        setItems(data); // Set the data directly if it is an array
+        setItems(data);
       } else if (data && Array.isArray(data.recipes)) {
-        console.log('Setting items with data.recipes:', data.recipes);
-        setItems(data.recipes); // Set the recipes if it is a property
+        setItems(data.recipes);
       } else {
         console.warn('Unexpected data format:', data);
-        setItems([]); // Set to an empty array if the data format is unexpected
+        setItems([]);
       }
 
-      setTotalPages(data.totalPages || 1); // Ensure `data.totalPages` is set correctly
-      console.log('Items state after setting:', items);
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -51,7 +47,7 @@ const Recipes = () => {
   useEffect(() => {
     const fetchLikes = async () => {
       if (token) {
-        const likes = await fetchUserLikes(token); // Fetch user likes
+        const likes = await fetchUserLikes(token);
         setUserLikes(likes);
       }
     };
@@ -60,7 +56,7 @@ const Recipes = () => {
   }, [token]);
 
   const handleSearch = () => {
-    setCurrentPage(1); // Reset to the first page on a new search
+    setCurrentPage(1);
     fetchData();
   };
 
@@ -69,7 +65,6 @@ const Recipes = () => {
   };
 
   const handleItemClick = (item: Recipe) => {
-    // Handle item click (e.g., navigate to a details page)
     console.log('Item clicked:', item);
   };
 
@@ -77,23 +72,19 @@ const Recipes = () => {
 
   return (
     <div>
-      <div>
-        <SearchBar
-          handleSearch={handleSearch}
-          setSearchTerm={setSearchTerm}
-          setSearchBy={setSearchBy}
-        />
-      </div>
-      <div>
-        <GridList
-          items={items}
-          likedRecipes={userLikes} // Pass the liked recipes array
-          onItemClick={handleItemClick}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          handlePageChange={handlePageChange}
-        />
-      </div>
+      <SearchBar
+        handleSearch={handleSearch}
+        setSearchTerm={setSearchTerm}
+        setSearchBy={setSearchBy}
+      />
+      <GridList
+        items={items}
+        likedRecipes={userLikes}
+        onItemClick={handleItemClick}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 };

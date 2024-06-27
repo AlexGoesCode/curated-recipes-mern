@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 import userRouter from './routes/userRouter.js';
 import recipesRouter from './routes/recipesRouter.js';
+import { cloudinaryConfig } from './config/cloudinary.js';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const addMiddlewares = (app) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
+  cloudinaryConfig();
 };
 
 const startServer = (app) => {

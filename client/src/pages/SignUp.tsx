@@ -31,6 +31,7 @@ const SignUp = () => {
     // urlencoded.append('name', username);
     urlencoded.append('email', email);
     urlencoded.append('password', password);
+    urlencoded.append('name', username);
 
     const requestOptions = {
       method: 'POST',
@@ -59,7 +60,25 @@ const SignUp = () => {
     >
       <div>
         <label
-          htmlFor='email'
+          htmlFor='name'
+          className='block text-sm font-medium leading-6 text-gray-100'
+        >
+          User Name
+        </label>
+        <div className='mt-2'>
+          <input
+            id='username'
+            name='username'
+            type='text'
+            autoComplete='username'
+            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+          />
+        </div>
+        <label
+          htmlFor='username'
           className='block text-sm font-medium leading-6 text-gray-100'
         >
           Email address
@@ -96,6 +115,14 @@ const SignUp = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+          />
+        </div>
+        <div className='mt-2'>
+          <input
+            id='file'
+            name='file'
+            type='file'
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>

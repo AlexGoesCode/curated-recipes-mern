@@ -3,30 +3,26 @@ import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext'; // Ensure this path is correct
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
-  const { login, setError, error } = useAuth();
+
+  const { login, setError, error, isAuthenticated } = useAuth();
 
   const handleLogin = async () => {
     if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
     }
-    await login(username, password);
-
-    // Assuming error is set within useAuth context if login fails
-    if (!error) {
-      setIsLoggedIn(true); // Update the state variable on successful login
-    }
+    await login(email, password);
+    //redirect user to Home page, or recipes page...
   };
 
   // Reset isLoggedIn when there is an error
-  useEffect(() => {
-    if (error) {
-      setIsLoggedIn(false);
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+
+  //   }
+  // }, [error]);
 
   return (
     <AuthLayout
@@ -48,8 +44,8 @@ const Login = () => {
             type='email'
             autoComplete='email'
             required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
@@ -87,7 +83,7 @@ const Login = () => {
       </div>
 
       {error && <div className='text-red-500 text-sm'>{error}</div>}
-      {isLoggedIn && (
+      {isAuthenticated && (
         <div className='text-gray-100 text-sm'>You are logged in</div>
       )}
     </AuthLayout>

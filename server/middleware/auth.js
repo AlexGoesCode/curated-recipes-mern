@@ -8,6 +8,8 @@ const authMiddleware = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // find user by id using the decoded.sub (which is the user id). done
+    //send that user found in req.user. done
     req.user = decoded;
     next();
   } catch (err) {

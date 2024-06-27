@@ -21,7 +21,10 @@ const LikeButton = ({
     }
   }, [likedRecipes, recipeId]);
 
-  const handleLike = async () => {
+  const handleLike = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation(); // Prevent the event from bubbling up to the parent div
     if (liked) return;
 
     try {
@@ -47,7 +50,13 @@ const LikeButton = ({
   };
 
   return (
-    <button onClick={handleLike} disabled={liked}>
+    <button
+      className={`mt-2 px-4 py-2 rounded ${
+        liked ? 'bg-red-500 text-white' : 'bg-gray-300'
+      }`}
+      onClick={handleLike}
+      disabled={liked}
+    >
       {liked ? 'Liked' : 'Like'}
     </button>
   );
