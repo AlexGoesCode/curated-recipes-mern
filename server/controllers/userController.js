@@ -2,9 +2,13 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import passwordEncryption from '../utils/passwordServices.js';
+import { r } from 'tar';
+import { imageUpload } from '../utils/imageUpload.js';
 
 export const registerUser = async (req, res) => {
   console.log('req.body!!! :>> ', req.body);
+  console.log('req.file :>> ', req.file);
+
   try {
     const user = await User.findOne({ email: req.body.email });
     console.log('user :>> ', user);
@@ -19,10 +23,13 @@ export const registerUser = async (req, res) => {
           .json({ message: 'Server error hashing password' });
       }
       if (hashedPassword) {
+        //upload file to cloudinary
+        const avatar = await imageUpload(req.file, 'user-avatars');
         const newUser = new User({
           email: req.body.email,
           password: hashedPassword,
           name: req.body.name,
+          avatar: image,
         });
         const savedUser = await newUser.save();
         res.status(201).json({
@@ -64,7 +71,7 @@ export const loginUser = async (req, res) => {
       res.status(200).json({
         message: 'Login successful',
         user: {
-          id: user._id,
+          _id: user._id,
           email: user.email,
           username: user.name,
           likedRecipes: user.likedRecipes,
