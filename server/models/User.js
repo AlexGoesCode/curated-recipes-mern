@@ -7,6 +7,7 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     name: { type: String, required: true },
     likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'recipe' }],
+    avatar: { type: String, required: false },
   },
   { timestamps: true }
 );

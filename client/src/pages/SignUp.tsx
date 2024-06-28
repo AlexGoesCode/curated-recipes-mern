@@ -6,6 +6,7 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [avatar, setAvatar] = useState<File | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const { setError, error } = useAuth(); // Get error handling from context
 
@@ -27,6 +28,9 @@ const SignUp = () => {
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
+    //! Modify this function according to Postman code:
+    // instead of urlenconded (which it si a URLSearchParams variable), we need to us a FormData object.
+    //then append the fields to the FormData object, and do not forget to append the avatar .
     const urlencoded = new URLSearchParams();
     // urlencoded.append('name', username);
     urlencoded.append('email', email);
@@ -51,7 +55,7 @@ const SignUp = () => {
       console.log('error :>> ', error);
     }
   };
-
+  const handleFileChange = (e) => {};
   return (
     <AuthLayout
       title='Sign up for an account'
@@ -124,6 +128,7 @@ const SignUp = () => {
             name='file'
             type='file'
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            onChange={handleFileChange}
           />
         </div>
       </div>

@@ -25,11 +25,12 @@ export const registerUser = async (req, res) => {
       if (hashedPassword) {
         //upload file to cloudinary
         const avatar = await imageUpload(req.file, 'user-avatars');
+        console.log('avatar :>> ', avatar);
         const newUser = new User({
           email: req.body.email,
           password: hashedPassword,
           name: req.body.name,
-          avatar: image,
+          avatar: avatar,
         });
         const savedUser = await newUser.save();
         res.status(201).json({

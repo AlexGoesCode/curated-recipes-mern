@@ -6,6 +6,7 @@ export const imageUpload = async (file, folder) => {
       folder: folder,
     });
     console.log(result);
+    //we return just the secure_url property. In case of needing more properties, we can return the whole result object.
     return result.secure_url;
   } catch (e) {
     console.log(e);
