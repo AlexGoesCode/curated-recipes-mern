@@ -31,7 +31,7 @@ const SignUp = () => {
     //! Modify this function according to Postman code:
     // instead of urlenconded (which it si a URLSearchParams variable), we need to us a FormData object.
     //then append the fields to the FormData object, and do not forget to append the avatar .
-    const urlencoded = new URLSearchParams();
+    const formdata = new FormData() {
     // urlencoded.append('name', username);
     urlencoded.append('email', email);
     urlencoded.append('password', password);
@@ -55,7 +55,17 @@ const SignUp = () => {
       console.log('error :>> ', error);
     }
   };
-  const handleFileChange = (e) => {};
+
+  //* Function to handle avatar upload
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
+      setAvatar(selectedFile); // Assuming setAvatar is a function that sets the state of avatar
+      console.log(e.target); // Logging the event target to have an idea of what the function is receiving
+    }
+  };
+
+  
   return (
     <AuthLayout
       title='Sign up for an account'
