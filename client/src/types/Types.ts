@@ -5,7 +5,7 @@ export type Recipe = {
   ingredients: string[];
   instructions: string;
   difficulty: 'easy' | 'medium' | 'hard';
-  likes: number;
+  likes: string[];
   imageUrl: string;
   diet: 'none' | 'vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free'; // Match the schema exactly
 };
@@ -15,6 +15,7 @@ export type UserType = {
   username: string;
   likedRecipes: Recipe[];
   id: string;
+  avatar: string;
 };
 
 export type SingleRecipeOkResponse = {
@@ -23,8 +24,8 @@ export type SingleRecipeOkResponse = {
   data: Recipe;
 };
 
-export type LoginResponse = {
+export type LoginAndSignUpResponse = {
   message: string;
   user: UserType;
-  token: string;
+  token?: string;
 };

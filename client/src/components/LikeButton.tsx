@@ -25,17 +25,21 @@ const LikeButton = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation(); // Prevent the event from bubbling up to the parent div
+    onLike(recipeId);
     if (liked) return;
 
     try {
-      const response = await fetch('/api/like', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer your-auth-token`, // Add your auth token here
-        },
-        body: JSON.stringify({ userId, recipeId }),
-      });
+      const response = await fetch(
+        `http://localhost:5022/api/curated-recipes/${recipeId}/like`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer your-auth-token`, // Add your auth token here
+          },
+          body: JSON.stringify({ userId, recipeId }),
+        }
+      );
 
       if (response.ok) {
         setLiked(true);

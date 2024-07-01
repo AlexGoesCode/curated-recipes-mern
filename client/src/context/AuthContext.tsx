@@ -13,17 +13,19 @@ interface AuthContextType {
   logout: () => void;
   setError: (error: string) => void;
   error: string | null;
+  avatarUrl: string; // Add avatarUrl to the context type
+  updateUserAvatar: (url: string) => void; // Add updateUserAvatar to the context type
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Start with false for login
-  const [error, setError] = useState<string | null>(null); // Add error state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState(''); // Add avatarUrl state
 
   const login = async (email: string, password: string) => {
-    // Implement your login logic here
     console.log(`Logging in with username: ${email} and password: ${password}`);
 
     const myHeaders = new Headers();
@@ -48,7 +50,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
         const result = (await response.json()) as LoginResponse;
         console.log('result :>> ', result);
-        //1. if login is successful, set token in local storage
         if (!result.token) {
           alert('you need to login first');
           return;
@@ -56,13 +57,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (result.token) {
           localStorage.setItem('token', result.token);
           setUser(result.user);
+          setAvatarUrl(result.user.avatar);
         }
       }
     } catch (error) {
       console.log('error :>> ', error);
     }
 
-    // setIsAuthenticated(true); // Update based on your logic
     setError(null); // Clear any previous errors
   };
 
@@ -83,9 +84,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user?.email]);
 
+  const updateUserAvatar = (url: string) => {
+    setAvatarUrl(url);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, setError, error }}
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        setError,
+        error,
+        avatarUrl,
+        updateUserAvatar,
+      }}
     >
       {children}
     </AuthContext.Provider>

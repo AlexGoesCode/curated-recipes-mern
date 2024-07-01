@@ -32,10 +32,11 @@ export const registerUser = async (req, res) => {
           name: req.body.name,
           avatar: avatar,
         });
-        const savedUser = await newUser.save();
+        const user = await newUser.save();
+        //! if you want to leave the user logged in after registration, generate the token with the user id, and include the token in the response. In the client, save the token in local storage.
         res.status(201).json({
           message: 'user registered successfully',
-          savedUser,
+          user,
         });
         return;
       }

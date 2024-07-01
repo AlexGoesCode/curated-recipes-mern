@@ -6,7 +6,7 @@ import { Recipe } from '../types/Types';
 interface GridListProps {
   items: Recipe[];
   likedRecipes: string[];
-  onItemClick: (item: Recipe) => void;
+
   totalPages: number;
   currentPage: number;
   handlePageChange: (page: number) => void;
@@ -15,7 +15,7 @@ interface GridListProps {
 function GridList({
   items,
   likedRecipes,
-  onItemClick,
+
   totalPages,
   currentPage,
   handlePageChange,
@@ -57,7 +57,6 @@ function GridList({
             key={item._id}
             item={item}
             liked={item._id ? likedItems.includes(item._id) : false} // Check if _id is defined
-            onItemClick={onItemClick}
             onLike={handleLike} // Pass down the handleLike function
           />
         ))}
@@ -68,7 +67,6 @@ function GridList({
             key={item._id}
             item={item}
             liked={item._id ? likedItems.includes(item._id) : false} // Check if _id is defined
-            onItemClick={onItemClick}
             onLike={handleLike} // Pass down the handleLike function
           />
         ))}

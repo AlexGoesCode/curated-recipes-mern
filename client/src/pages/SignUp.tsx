@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext';
+import { LoginAndSignUpResponse } from '../types/Types';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -8,7 +9,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [avatar, setAvatar] = useState<File | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { setError, error } = useAuth(); // Get error handling from context
+  const { setError, error, updateUserAvatar } = useAuth(); // Get error handling from context
 
   const handleSignUp = async () => {
     console.log('username :>> ', username, password);
@@ -43,25 +44,35 @@ const SignUp = () => {
       method: 'POST',
       body: formdata,
       // headers: myHeaders,
-      // redirect: 'follow' as RequestRedirect,
+      redirect: 'follow', //,as RequestRedirect,
     };
 
-    fetch('http://localhost:5022/api/user/register', requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
-    // try {
-    //   const response = await fetch(
-    //     'http://localhost:5022/api/user/register',
-    //     requestOptions
-    //   );
-    //   //do some error handling here : if response.ok is not Ok
-    //   //if repsonse.ok is  true then we transform the response to json
-    //   const result = await response.json();
-    //   console.log('result :>> ', result);
-    // } catch (error) {
-    //   console.log('error :>> ', error);
-    // }
+    // fetch('http://localhost:5022/api/user/register', requestOptions)
+    //   .then((response) => response.text())
+    //   .then((result) => console.log(result))
+    //   .catch((error) => console.error(error));
+    try {
+      const response = await fetch(
+        'http://localhost:5022/api/user/register',
+        requestOptions
+      );
+      if (!response.ok) {
+        const errorResult = await response.json();
+        setError(errorResult.message || 'An error occurred.');
+        return;
+      }
+      const result = (await response.json()) as LoginAndSignUpResponse;
+      console.log('result :>> ', result);
+      //! redirect to Login page
+
+      // Assuming the server responds with the user's avatar URL
+      if (result.user.avatar) {
+        updateUserAvatar(result.user.avatar); // Call a function to update the avatar in the navbar
+      }
+    } catch (error) {
+      console.error(error);
+      setError('An error occurred during sign-up.');
+    }
   };
 
   //* Function to handle avatar upload
