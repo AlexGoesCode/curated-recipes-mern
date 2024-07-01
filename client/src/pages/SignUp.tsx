@@ -25,35 +25,43 @@ const SignUp = () => {
       `Signing up with username: ${username} and password: ${password}`
     );
 
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+    // const myHeaders = new Headers();
+    // myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
     //! Modify this function according to Postman code:
     // instead of urlenconded (which it si a URLSearchParams variable), we need to us a FormData object.
     //then append the fields to the FormData object, and do not forget to append the avatar .
-    const formdata = new FormData() {
-    // urlencoded.append('name', username);
-    urlencoded.append('email', email);
-    urlencoded.append('password', password);
-    urlencoded.append('name', username);
-
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: urlencoded,
-    };
-    try {
-      const response = await fetch(
-        'http://localhost:5022/api/user/register',
-        requestOptions
-      );
-      //do some error handling here : if response.ok is not Ok
-      //if repsonse.ok is  true then we transform the response to json
-      const result = await response.json();
-      console.log('result :>> ', result);
-    } catch (error) {
-      console.log('error :>> ', error);
+    const formdata = new FormData();
+    formdata.append('email', email);
+    formdata.append('password', password);
+    formdata.append('name', username);
+    if (avatar) {
+      formdata.append('avatar', avatar);
     }
+
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: formdata,
+      // headers: myHeaders,
+      // redirect: 'follow' as RequestRedirect,
+    };
+
+    fetch('http://localhost:5022/api/user/register', requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
+    // try {
+    //   const response = await fetch(
+    //     'http://localhost:5022/api/user/register',
+    //     requestOptions
+    //   );
+    //   //do some error handling here : if response.ok is not Ok
+    //   //if repsonse.ok is  true then we transform the response to json
+    //   const result = await response.json();
+    //   console.log('result :>> ', result);
+    // } catch (error) {
+    //   console.log('error :>> ', error);
+    // }
   };
 
   //* Function to handle avatar upload
@@ -65,7 +73,6 @@ const SignUp = () => {
     }
   };
 
-  
   return (
     <AuthLayout
       title='Sign up for an account'
