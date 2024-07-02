@@ -8,8 +8,9 @@ import Logout from '../pages/Logout';
 import SignUp from '../pages/SignUp';
 // import NotFound from '../../pages/not-found/NotFound';
 import CreateRecipe from '../pages/CreateRecipe';
-import SavedRecipes from '../pages/SavedRecipes'; // Import the SavedRecipes component
-// import ProtectedRoute from '../protected-route/ProtectedRoute';
+import SavedRecipes from '../pages/SavedRecipes';
+import ProtectedRoute from '../components/ProtectedRoute';
+import NotFound from '../pages/NotFound';
 
 const Routes = () => {
   return (
@@ -21,44 +22,44 @@ const Routes = () => {
       <Route
         path='/recipes'
         element={
-          //   <ProtectedRoute>
-          <Recipes />
-          //   </ProtectedRoute>
+          <ProtectedRoute>
+            <Recipes />
+          </ProtectedRoute>
         }
       />
       <Route
         path='/recipes/:recipeid'
         element={
-          //   <ProtectedRoute>
-          <SingleRecipe />
-          //   </ProtectedRoute>
+          <ProtectedRoute>
+            <SingleRecipe />
+          </ProtectedRoute>
         }
       />
       <Route
         path='/testreact'
         element={
-          //   <ProtectedRoute>
-          <TestReact />
-          //   </ProtectedRoute>
+          <ProtectedRoute>
+            <TestReact />
+          </ProtectedRoute>
         }
       />
       <Route
         path='/create-recipe'
         element={
-          //  <ProtectedRoute>
-          <CreateRecipe />
-          //  </ProtectedRoute>
+          <ProtectedRoute>
+            <CreateRecipe />
+          </ProtectedRoute>
         }
       />
       <Route
         path='/saved-recipes'
         element={
-          //  <ProtectedRoute>
-          <SavedRecipes />
-          //  </ProtectedRoute>
+          <ProtectedRoute>
+            <SavedRecipes />
+          </ProtectedRoute>
         }
       />
-      {/* <Route path='*' element={<NotFound />} /> */}
+      <Route path='*' element={<NotFound />} />
     </RouterRoutes>
   );
 };
