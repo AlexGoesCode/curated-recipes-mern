@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext'; // Ensure this path is correct
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,9 +15,14 @@ const Login = () => {
       return;
     }
     await login(email, password);
-    Navigate({ to: '/recipes' });
   };
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/recipes');
+    }
+  }, [isAuthenticated, navigate]);
   // Reset isLoggedIn when there is an error
   // useEffect(() => {
   //   if (error) {

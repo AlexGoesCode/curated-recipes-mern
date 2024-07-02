@@ -5,7 +5,7 @@ import {
   ReactNode,
   useEffect,
 } from 'react';
-import { LoginResponse, UserType } from '../types/Types';
+import { LoginAndSignUpResponse, UserType } from '../types/Types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!response.ok) throw new Error('Failed to login');
 
       if (response.ok) {
-        const result = (await response.json()) as LoginResponse;
+        const result = (await response.json()) as LoginAndSignUpResponse;
         console.log('result :>> ', result);
         if (!result.token) {
           alert('you need to login first');
@@ -99,6 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         error,
         avatarUrl,
         updateUserAvatar,
+        token: localStorage.getItem('token'),
       }}
     >
       {children}
