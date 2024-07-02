@@ -8,8 +8,17 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarName, setAvatarName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { setError, error, updateUserAvatar } = useAuth(); // Get error handling from context
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      setAvatar(file);
+      setAvatarName(file.name); // Step 2: Update the file name state
+    }
+  };
 
   const handleSignUp = async () => {
     console.log('username :>> ', username, password);
@@ -76,13 +85,13 @@ const SignUp = () => {
   };
 
   //* Function to handle avatar upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const selectedFile = e.target.files[0];
-      setAvatar(selectedFile); // Assuming setAvatar is a function that sets the state of avatar
-      console.log(e.target); // Logging the event target to have an idea of what the function is receiving
-    }
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const selectedFile = e.target.files[0];
+  //     setAvatar(selectedFile); // Assuming setAvatar is a function that sets the state of avatar
+  //     console.log(e.target); // Logging the event target to have an idea of what the function is receiving
+  //   }
+  // };
 
   return (
     <AuthLayout
@@ -155,9 +164,10 @@ const SignUp = () => {
             id='file'
             name='file'
             type='file'
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             onChange={handleFileChange}
           />
+          {avatarName && <p>{avatarName} uploaded</p>}
         </div>
       </div>
 
@@ -179,7 +189,7 @@ const SignUp = () => {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
   Disclosure,
@@ -12,6 +12,7 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
+import { update } from 'tar';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -26,6 +27,14 @@ function classNames(...classes: string[]) {
 
 const Navbar = () => {
   const { isAuthenticated, logout, avatarUrl } = useAuth();
+  const fileInputRef = useRef(null);
+
+  // Function to handle avatar change
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+
+    console.log(file);
+  };
 
   return (
     <Disclosure as='nav' className='bg-gray-700 bg-opacity-85'>
@@ -140,6 +149,19 @@ const Navbar = () => {
                               >
                                 Sign up
                               </Link>
+                            )}
+                          </MenuItem>
+                          <MenuItem>
+                            {({ active }) => (
+                              <button
+                                onClick={() => handleAvatarChange()}
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Change Avatar
+                              </button>
                             )}
                           </MenuItem>
                         </>
