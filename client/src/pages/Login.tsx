@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext'; // Ensure this path is correct
+import { Navigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const Login = () => {
       return;
     }
     await login(email, password);
-    //redirect user to Home page, or recipes page...
+    Navigate({ to: '/recipes' });
   };
 
   // Reset isLoggedIn when there is an error

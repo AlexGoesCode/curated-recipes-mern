@@ -15,6 +15,7 @@ interface AuthContextType {
   error: string | null;
   avatarUrl: string; // Add avatarUrl to the context type
   updateUserAvatar: (url: string) => void; // Add updateUserAvatar to the context type
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

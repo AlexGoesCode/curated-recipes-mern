@@ -14,7 +14,7 @@ const CreateRecipe = () => {
     imageUrl: '',
     ingredients: [''],
     instructions: '',
-    likes: 0,
+    likes: [],
   });
 
   const { setError, error } = useAuth();
