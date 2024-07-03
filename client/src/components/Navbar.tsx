@@ -12,13 +12,12 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
-import { update } from 'tar';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Recipes', href: '/recipes', current: false },
   { name: 'Create Recipe', href: '/create-recipe', current: false },
-  { name: 'Saved Recipes', href: '/saved-recipes', current: false }, // Updated link
+  { name: 'Saved Recipes', href: '/saved-recipes', current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -26,14 +25,43 @@ function classNames(...classes: string[]) {
 }
 
 const Navbar = () => {
-  const { isAuthenticated, logout, avatarUrl } = useAuth();
-  const fileInputRef = useRef(null);
+  const { isAuthenticated, logout, avatarUrl, updateUserAvatar } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Function to handle avatar change
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+  const handleAvatarChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('avatar', file);
 
-    console.log(file);
+        // Mock upload to server. Replace with your own server
+        const response = await fetch(
+          'http://localhost:5000/api/upload-avatar',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you use token-based authentication
+            },
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to upload avatar');
+        }
+
+        const data = await response.json();
+        console.log('File uploaded successfully', data);
+
+        // Optionally, update the avatar URL in your state/context
+        updateUserAvatar(data.avatar);
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+      }
+    }
   };
 
   return (
@@ -64,7 +92,7 @@ const Navbar = () => {
                         className={classNames(
                           item.current
                             ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-5 hover:text-white',
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
@@ -110,19 +138,42 @@ const Navbar = () => {
                   >
                     <MenuItems className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
                       {isAuthenticated ? (
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              onClick={logout}
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block w-full text-left px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Sign out
-                            </button>
-                          )}
-                        </MenuItem>
+                        <>
+                          <MenuItem>
+                            {({ active }) => (
+                              <button
+                                onClick={logout}
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                )}
+                              >
+                                Sign out
+                              </button>
+                            )}
+                          </MenuItem>
+                          <MenuItem>
+                            {({ active }) => (
+                              <>
+                                <button
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Change Avatar
+                                </button>
+                                <input
+                                  type='file'
+                                  ref={fileInputRef}
+                                  className='hidden'
+                                  onChange={handleAvatarChange}
+                                />
+                              </>
+                            )}
+                          </MenuItem>
+                        </>
                       ) : (
                         <>
                           <MenuItem>
@@ -149,19 +200,6 @@ const Navbar = () => {
                               >
                                 Sign up
                               </Link>
-                            )}
-                          </MenuItem>
-                          <MenuItem>
-                            {({ active }) => (
-                              <button
-                                onClick={() => handleAvatarChange()}
-                                className={classNames(
-                                  active ? 'bg-gray-100' : '',
-                                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
-                                )}
-                              >
-                                Change Avatar
-                              </button>
                             )}
                           </MenuItem>
                         </>

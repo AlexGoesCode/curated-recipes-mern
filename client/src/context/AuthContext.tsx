@@ -13,8 +13,8 @@ interface AuthContextType {
   logout: () => void;
   setError: (error: string) => void;
   error: string | null;
-  avatarUrl: string; // Add avatarUrl to the context type
-  updateUserAvatar: (url: string) => void; // Add updateUserAvatar to the context type
+  avatarUrl: string;
+  updateUserAvatar: (url: string) => void;
   token: string | null;
 }
 
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState(''); // Add avatarUrl state
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   const login = async (email: string, password: string) => {
     console.log(`Logging in with username: ${email} and password: ${password}`);
@@ -57,36 +57,49 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         if (result.token) {
           localStorage.setItem('token', result.token);
+          localStorage.setItem('user', JSON.stringify(result.user));
           setUser(result.user);
           setAvatarUrl(result.user.avatar);
+          setIsAuthenticated(true);
         }
       }
     } catch (error) {
       console.log('error :>> ', error);
     }
 
-    setError(null); // Clear any previous errors
+    setError(null);
   };
 
   const logout = () => {
-    localStorage.removeItem('token'); // Clear the token on logout
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     console.log('Logging out...');
     setIsAuthenticated(false);
     setUser(null);
+    setAvatarUrl('');
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
 
-    if (token) {
+    if (token && storedUser) {
       setIsAuthenticated(true);
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setAvatarUrl(parsedUser.avatar);
     } else {
       setIsAuthenticated(false);
     }
-  }, [user?.email]);
+  }, []);
 
   const updateUserAvatar = (url: string) => {
     setAvatarUrl(url);
+    if (user) {
+      const updatedUser = { ...user, avatar: url };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
   };
 
   return (

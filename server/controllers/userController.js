@@ -26,17 +26,20 @@ export const registerUser = async (req, res) => {
         //upload file to cloudinary
         const avatar = await imageUpload(req.file, 'user-avatars');
         console.log('avatar :>> ', avatar);
+
         const newUser = new User({
           email: req.body.email,
           password: hashedPassword,
           name: req.body.name,
           avatar: avatar,
         });
-        const user = await newUser.save();
-        //! if you want to leave the user logged in after registration, generate the token with the user id, and include the token in the response. In the client, save the token in local storage.
+        const savedUser = await newUser.save();
+        //! if you want to leave the user logged in after registration,
+        //! generate the token with the user id, and include the token in the response.
+        //! In the client, save the token in local storage.
         res.status(201).json({
           message: 'user registered successfully',
-          user,
+          user: savedUser,
         });
         return;
       }
@@ -76,6 +79,7 @@ export const loginUser = async (req, res) => {
           _id: user._id,
           email: user.email,
           username: user.name,
+          avatar: user.avatar,
           likedRecipes: user.likedRecipes,
         },
         token,
@@ -90,4 +94,21 @@ export const loginUser = async (req, res) => {
 export const testAuth = async (req, res) => {
   console.log('testing auth');
   console.log('req.user :>> ', req.user);
+};
+
+export const uploadAvatar = async (req, res) => {
+  try {
+    const userId = req.user.sub; // Assuming `req.user.sub` contains the user ID from the auth middleware
+    const avatar = await imageUpload(req.file, 'user-avatars');
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { avatar: avatar },
+      { new: true }
+    );
+
+    res.json({ message: 'Avatar uploaded successfully', avatar: user.avatar });
+  } catch (error) {
+    console.log('Avatar upload error :>> ', error);
+    res.status(500).json({ message: 'Failed to upload avatar' });
+  }
 };

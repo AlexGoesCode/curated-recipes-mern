@@ -30,17 +30,10 @@ const SignUp = () => {
       setError('Password must be at least 6 characters long.');
       return;
     }
-    // Implement your sign-up logic here, e.g., call an API to register the user
     console.log(
       `Signing up with username: ${username} and password: ${password}`
     );
 
-    // const myHeaders = new Headers();
-    // myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-
-    //! Modify this function according to Postman code:
-    // instead of urlenconded (which it si a URLSearchParams variable), we need to us a FormData object.
-    //then append the fields to the FormData object, and do not forget to append the avatar .
     const formdata = new FormData();
     formdata.append('email', email);
     formdata.append('password', password);
@@ -55,11 +48,7 @@ const SignUp = () => {
       // headers: myHeaders,
       redirect: 'follow', //,as RequestRedirect,
     };
-
-    // fetch('http://localhost:5022/api/user/register', requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.error(error));
+    //
     try {
       const response = await fetch(
         'http://localhost:5022/api/user/register',
@@ -83,15 +72,6 @@ const SignUp = () => {
       setError('An error occurred during sign-up.');
     }
   };
-
-  //* Function to handle avatar upload
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     const selectedFile = e.target.files[0];
-  //     setAvatar(selectedFile); // Assuming setAvatar is a function that sets the state of avatar
-  //     console.log(e.target); // Logging the event target to have an idea of what the function is receiving
-  //   }
-  // };
 
   return (
     <AuthLayout
@@ -189,7 +169,7 @@ const SignUp = () => {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>
