@@ -168,7 +168,7 @@ const Navbar = () => {
                           <MenuItem>
                             {({ active }) => (
                               <>
-                                {/* <button
+                                <button
                                   onClick={() => fileInputRef.current?.click()}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -176,13 +176,13 @@ const Navbar = () => {
                                   )}
                                 >
                                   Change Avatar
-                                </button> */}
-                                {/* <input
+                                </button>
+                                <input
                                   type='file'
                                   ref={fileInputRef}
                                   className='hidden'
                                   onChange={handleAvatarChange}
-                                /> */}
+                                />
                               </>
                             )}
                           </MenuItem>
