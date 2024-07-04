@@ -13,8 +13,6 @@ const Recipes = () => {
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [userLikes, setUserLikes] = useState<string[]>([]);
-  const { token } = useAuth();
 
   // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
@@ -44,17 +42,6 @@ const Recipes = () => {
     fetchData();
   }, [searchTerm, searchBy, currentPage]);
 
-  useEffect(() => {
-    const fetchLikes = async () => {
-      if (token) {
-        const likes = await fetchUserLikes(token);
-        setUserLikes(likes);
-      }
-    };
-
-    fetchLikes();
-  }, [token]);
-
   const handleSearch = () => {
     setCurrentPage(1);
     fetchData();
@@ -62,10 +49,6 @@ const Recipes = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const handleItemClick = (item: Recipe) => {
-    console.log('Item clicked:', item);
   };
 
   console.log('Items before passing to GridList:', items); // Debug log
@@ -79,11 +62,10 @@ const Recipes = () => {
       />
       <GridList
         items={items}
-        likedRecipes={userLikes}
-        onItemClick={handleItemClick}
         totalPages={totalPages}
         currentPage={currentPage}
         handlePageChange={handlePageChange}
+        fetchData={fetchData}
       />
     </div>
   );

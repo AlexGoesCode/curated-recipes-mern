@@ -29,3 +29,7 @@ export type LoginAndSignUpResponse = {
   user: UserType;
   token?: string;
 };
+export type GetProfileOkResponse = {
+  message: string;
+  user: UserType;
+};

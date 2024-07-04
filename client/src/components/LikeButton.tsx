@@ -1,52 +1,62 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface LikeButtonProps {
   recipeId: string;
-  userId: string;
-  likedRecipes: string[];
-  onLike: (recipeId: string) => void; // Add onLike prop
+
+  isLiked: boolean;
+  fetchData: () => Promise<void>;
 }
 
-const LikeButton = ({
-  recipeId,
-  userId,
-  likedRecipes,
-  onLike,
-}: LikeButtonProps) => {
-  const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    if (likedRecipes.includes(recipeId)) {
-      setLiked(true);
-    }
-  }, [likedRecipes, recipeId]);
+const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
+  const { user } = useAuth();
+  console.log('isLiked :>> ', isLiked);
 
   const handleLike = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation(); // Prevent the event from bubbling up to the parent div
-    onLike(recipeId);
-    if (liked) return;
+
+    console.log('user :>> ', user);
+    console.log('recipeId :>> ', recipeId);
+    console.log('isLiked :>> ', isLiked);
+    if (isLiked) {
+      alert('you already liked this recipe');
+      return;
+    }
 
     try {
+      const myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+      myHeaders.append(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token')}`
+      );
+      const urlencoded = new URLSearchParams();
+      urlencoded.append('recipeId', recipeId);
+      urlencoded.append('userId', user?.id);
+
+      if (!user?.id || !recipeId) {
+        alert('you need to login first to like a recipe');
+        return;
+      }
+
       const response = await fetch(
         `http://localhost:5022/api/curated-recipes/${recipeId}/like`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer your-auth-token`, // Add your auth token here
-          },
-          body: JSON.stringify({ userId, recipeId }),
+          headers: myHeaders,
+          body: urlencoded,
         }
       );
 
       if (response.ok) {
-        setLiked(true);
-        onLike(recipeId); // Call onLike prop
-      } else {
         const data = await response.json();
-        console.error(data.message);
+
+        console.log('recipe liked', data);
+        fetchData();
+      } else {
+        console.log("can't like recipe");
       }
     } catch (error) {
       console.error('Error liking recipe:', error);
@@ -56,12 +66,12 @@ const LikeButton = ({
   return (
     <button
       className={`mt-2 px-4 py-2 rounded ${
-        liked ? 'bg-red-500 text-white' : 'bg-gray-300'
+        isLiked ? 'bg-red-500 text-white' : 'bg-gray-300'
       }`}
       onClick={handleLike}
-      disabled={liked}
+      // disabled={isLiked}
     >
-      {liked ? 'Liked' : 'Like'}
+      {isLiked ? 'Liked' : 'Like'}
     </button>
   );
 };

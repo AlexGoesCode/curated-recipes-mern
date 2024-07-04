@@ -10,7 +10,7 @@ const SignUp = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarName, setAvatarName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { setError, error, updateUserAvatar } = useAuth(); // Get error handling from context
+  const { setError, error } = useAuth();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -62,11 +62,6 @@ const SignUp = () => {
       const result = (await response.json()) as LoginAndSignUpResponse;
       console.log('result :>> ', result);
       //! redirect to Login page
-
-      // Assuming the server responds with the user's avatar URL
-      if (result.user.avatar) {
-        updateUserAvatar(result.user.avatar); // Call a function to update the avatar in the navbar
-      }
     } catch (error) {
       console.error(error);
       setError('An error occurred during sign-up.');

@@ -5,7 +5,11 @@ import {
   ReactNode,
   useEffect,
 } from 'react';
-import { LoginAndSignUpResponse, UserType } from '../types/Types';
+import {
+  GetProfileOkResponse,
+  LoginAndSignUpResponse,
+  UserType,
+} from '../types/Types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -13,9 +17,11 @@ interface AuthContextType {
   logout: () => void;
   setError: (error: string) => void;
   error: string | null;
-  avatarUrl: string;
-  updateUserAvatar: (url: string) => void;
-  token: string | null;
+  user: UserType | null;
+  // avatarUrl: string;
+  // updateUserAvatar: (url: string) => void;
+  // token: string | null;
+  getUserProfile: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState('');
+  // const [avatarUrl, setAvatarUrl] = useState('');
 
   const login = async (email: string, password: string) => {
     console.log(`Logging in with username: ${email} and password: ${password}`);
@@ -59,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem('token', result.token);
           localStorage.setItem('user', JSON.stringify(result.user));
           setUser(result.user);
-          setAvatarUrl(result.user.avatar);
+          // setAvatarUrl(result.user.avatar);
           setIsAuthenticated(true);
         }
       }
@@ -76,31 +82,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('Logging out...');
     setIsAuthenticated(false);
     setUser(null);
-    setAvatarUrl('');
+  };
+
+  const getUserProfile = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      `Bearer ${localStorage.getItem('token')}`
+    );
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+    };
+    try {
+      const response = await fetch(
+        'http://localhost:5022/api/user/profile',
+        requestOptions
+      );
+
+      const result = (await response.json()) as GetProfileOkResponse;
+      console.log('result profile', result);
+      setUser(result.user);
+    } catch (error) {
+      console.log('error getting profile :>> ', error);
+    }
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
 
-    if (token && storedUser) {
+    if (token) {
+      getUserProfile();
       setIsAuthenticated(true);
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setAvatarUrl(parsedUser.avatar);
     } else {
       setIsAuthenticated(false);
+      alert('you need to login first');
     }
   }, []);
 
-  const updateUserAvatar = (url: string) => {
-    setAvatarUrl(url);
-    if (user) {
-      const updatedUser = { ...user, avatar: url };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    }
-  };
+  //!Delete updateUserAvatar function and stateVariable
+  // const updateUserAvatar = (url: string) => {
+  //   setAvatarUrl(url);
+  //   if (user) {
+  //     const updatedUser = { ...user, avatar: url };
+  //     setUser(updatedUser);
+  //     localStorage.setItem('user', JSON.stringify(updatedUser));
+  //   }
+  // };
 
   return (
     <AuthContext.Provider
@@ -110,9 +139,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         setError,
         error,
-        avatarUrl,
-        updateUserAvatar,
-        token: localStorage.getItem('token'),
+        // avatarUrl,
+        user,
+        getUserProfile,
       }}
     >
       {children}

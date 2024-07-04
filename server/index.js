@@ -30,10 +30,7 @@ const loadRoutes = (app) => {
 
 const DBConnection = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_DB);
     console.log('Connection with MongoDB established'.bgGreen);
   } catch (error) {
     console.log('Problems connecting to MongoDB'.bgRed, error);

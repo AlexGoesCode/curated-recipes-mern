@@ -18,18 +18,6 @@ const Login = () => {
   };
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/recipes');
-    }
-  }, [isAuthenticated, navigate]);
-  // Reset isLoggedIn when there is an error
-  // useEffect(() => {
-  //   if (error) {
-
-  //   }
-  // }, [error]);
-
   return (
     <AuthLayout
       title='Log-in to your account'

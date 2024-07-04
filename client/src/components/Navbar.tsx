@@ -25,13 +25,15 @@ function classNames(...classes: string[]) {
 }
 
 const Navbar = () => {
-  const { isAuthenticated, logout, avatarUrl, updateUserAvatar } = useAuth();
+  const { isAuthenticated, logout, user, getUserProfile } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAvatarChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log('asdasddd');
     const file = event.target.files?.[0];
+    console.log('file :>> ', file);
     if (file) {
       try {
         const formData = new FormData();
@@ -39,7 +41,7 @@ const Navbar = () => {
 
         // Mock upload to server. Replace with your own server
         const response = await fetch(
-          'http://localhost:5000/api/upload-avatar',
+          'http://localhost:5022/api/user/upload-avatar',
           {
             method: 'POST',
             headers: {
@@ -54,10 +56,12 @@ const Navbar = () => {
         }
 
         const data = await response.json();
+
         console.log('File uploaded successfully', data);
+        getUserProfile();
 
         // Optionally, update the avatar URL in your state/context
-        updateUserAvatar(data.avatar);
+        // updateUserAvatar(data.avatar);
       } catch (error) {
         console.error('Error uploading avatar:', error);
       }
@@ -85,6 +89,15 @@ const Navbar = () => {
                 <div className='flex flex-shrink-0 items-center'></div>
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
+                    <label htmlFor='avatar-file'>select file</label>
+                    <input
+                      type='file'
+                      name='avatar-file'
+                      id='avatar-file'
+                      ref={fileInputRef}
+                      className='hidden'
+                      onChange={handleAvatarChange}
+                    />
                     {navigation.map((item) => (
                       <Link
                         key={item.name}
@@ -121,7 +134,7 @@ const Navbar = () => {
                       <img
                         className='h-8 w-8 rounded-full'
                         src={
-                          avatarUrl ||
+                          user?.avatar ||
                           'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
                         }
                         alt='User Avatar'
@@ -155,7 +168,7 @@ const Navbar = () => {
                           <MenuItem>
                             {({ active }) => (
                               <>
-                                <button
+                                {/* <button
                                   onClick={() => fileInputRef.current?.click()}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -163,13 +176,13 @@ const Navbar = () => {
                                   )}
                                 >
                                   Change Avatar
-                                </button>
-                                <input
+                                </button> */}
+                                {/* <input
                                   type='file'
                                   ref={fileInputRef}
                                   className='hidden'
                                   onChange={handleAvatarChange}
-                                />
+                                /> */}
                               </>
                             )}
                           </MenuItem>

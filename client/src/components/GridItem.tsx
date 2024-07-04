@@ -1,18 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Recipe } from '../types/Types';
 import LikeButton from './LikeButton';
+import { useAuth } from '../context/AuthContext';
 
 interface GridItemProps {
   item: Recipe;
-  liked: boolean;
-
-  onLike: (recipeId: string) => void;
+  isLiked: boolean;
+  fetchData: () => Promise<void>;
 }
 
-const GridItem = ({ item, liked, onLike }: GridItemProps) => {
-  const handleLikeClick = (recipeId: string) => {
-    onLike(recipeId);
-  };
+const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
+  const { user } = useAuth();
 
   return (
     <div className='p-4 border rounded shadow-md cursor-pointer'>
@@ -31,9 +29,10 @@ const GridItem = ({ item, liked, onLike }: GridItemProps) => {
       <p className='text-gray-100'>Likes Number:{item.likes?.length}</p>
       <LikeButton
         recipeId={item._id}
-        userId={'your-user-id'} // Replace with dynamic user ID if available
-        likedRecipes={liked ? [item._id] : []}
-        onLike={handleLikeClick} // Pass down the handleLike function
+        // userId={'your-user-id'} // Replace with dynamic user ID if available
+        isLiked={isLiked}
+        // Pass down the handleLike function
+        fetchData={fetchData}
       />
     </div>
   );

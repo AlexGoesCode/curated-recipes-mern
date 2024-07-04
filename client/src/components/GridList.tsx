@@ -2,49 +2,28 @@ import { useState } from 'react';
 import GridItem from './GridItem';
 import Pagination from './Pagination';
 import { Recipe } from '../types/Types';
+import { useAuth } from '../context/AuthContext';
 
 interface GridListProps {
   items: Recipe[];
-  likedRecipes: string[];
 
   totalPages: number;
   currentPage: number;
   handlePageChange: (page: number) => void;
+  fetchData: () => Promise<void>;
 }
 
 function GridList({
   items,
-  likedRecipes,
 
   totalPages,
   currentPage,
   handlePageChange,
+  fetchData,
 }: GridListProps) {
-  const [likedItems, setLikedItems] = useState<string[]>(likedRecipes);
+  // console.log('items :>> ', items);
 
-  const handleLike = async (itemId: string) => {
-    if (likedItems.includes(itemId)) return;
-
-    try {
-      const response = await fetch('/api/like', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer your-auth-token`, // Replace with actual auth token
-        },
-        body: JSON.stringify({ userId: 'your-user-id', recipeId: itemId }),
-      });
-
-      if (response.ok) {
-        setLikedItems((prevLikedItems) => [...prevLikedItems, itemId]);
-      } else {
-        const data = await response.json();
-        console.error(data.message);
-      }
-    } catch (error) {
-      console.error('Error liking recipe:', error);
-    }
-  };
+  const { user } = useAuth();
 
   console.log('Rendering GridList with items:', items); // Debug log
   console.log('Total items:', items.length); // Additional log for item count
@@ -56,8 +35,8 @@ function GridList({
           <GridItem
             key={item._id}
             item={item}
-            liked={item._id ? likedItems.includes(item._id) : false} // Check if _id is defined
-            onLike={handleLike} // Pass down the handleLike function
+            isLiked={item._id ? item.likes.includes(user!.id) : false} // Check if _id is defined
+            fetchData={fetchData}
           />
         ))}
       </div>
@@ -66,8 +45,8 @@ function GridList({
           <GridItem
             key={item._id}
             item={item}
-            liked={item._id ? likedItems.includes(item._id) : false} // Check if _id is defined
-            onLike={handleLike} // Pass down the handleLike function
+            isLiked={item._id ? item.likes.includes(user!.id) : false} // Check if _id is defined
+            fetchData={fetchData}
           />
         ))}
       </div>

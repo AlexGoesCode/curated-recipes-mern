@@ -1,6 +1,7 @@
 import RecipeModel from '../models/Recipe.js';
 import Like from '../models/Like.js';
 import Recipe from '../models/Recipe.js';
+import User from '../models/User.js';
 
 const allRecipes = async (req, res) => {
   try {
@@ -97,6 +98,7 @@ const likeRecipe = async (req, res) => {
     const recipeToLike = await Recipe.findOne({ _id: recipeId });
     const isRecipeLiked = recipeToLike.likes.includes(userId) ? true : false;
     if (isRecipeLiked) {
+      //!remove the like.
       return res
         .status(400)
         .json({ message: 'You have already liked this recipe' });
@@ -110,8 +112,17 @@ const likeRecipe = async (req, res) => {
       },
       { new: true }
     );
-
-    console.log('addLikeToRecipe :>> ', addLikeToRecipe);
+    //add liked recipe to the array of liked recipes from the user
+    //1. finding the user using the userId
+    //2. adding the recipeId to the likedRecipes array
+    const addLikeToUserLikedRecipes = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: { likedRecipes: recipeId },
+      },
+      { new: true }
+    );
+    console.log('addLikeToUserLikedRecipes :>> ', addLikeToUserLikedRecipes);
 
     res.status(200).json({ message: 'Recipe liked successfully' });
   } catch (error) {

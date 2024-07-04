@@ -2,23 +2,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Recipe } from '../types/Types';
 import GridList from '../components/GridList';
+import { useAuth } from '../context/AuthContext';
 
 const SavedRecipes = () => {
-  const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('savedRecipes');
-    if (saved) {
-      setSavedRecipes(JSON.parse(saved));
-    }
-  }, []);
+  const { user } = useAuth();
+  console.log('user.likedRecipes :>> ', user.likedRecipes);
 
   return (
     <div>
       <h1 className='text-center text-3xl my-4'>Saved Recipes</h1>
       <GridList
-        items={savedRecipes}
-        likedRecipes={[]} // Pass likedRecipes prop (add logic if needed)
+        items={user.likedRecipes}
+        // Pass likedRecipes prop (add logic if needed)
         totalPages={1}
         currentPage={1}
         handlePageChange={() => {}}
