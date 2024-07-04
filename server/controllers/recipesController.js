@@ -130,6 +130,46 @@ const likeRecipe = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+const unlikeRecipe = async (req, res) => {
+  const { userId, recipeId } = req.body;
+
+  try {
+    const recipeToUnlike = await Recipe.findOne({ _id: recipeId });
+    const isRecipeLiked = recipeToUnlike.likes.includes(userId) ? true : false;
+    if (!isRecipeLiked) {
+      return res
+        .status(400)
+        .json({ message: 'You have not liked this recipe yet' });
+    }
+
+    const removeLikeFromRecipe = await Recipe.findByIdAndUpdate(
+      recipeId,
+      {
+        $pull: { likes: userId },
+      },
+      { new: true }
+    );
+
+    const removeLikeFromUserLikedRecipes = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { likedRecipes: recipeId },
+      },
+      { new: true }
+    );
+    console.log(
+      'removeLikeFromUserLikedRecipes :>> ',
+      removeLikeFromUserLikedRecipes
+    );
+
+    res.status(200).json({ message: 'Recipe unliked successfully' });
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 const getUserLikes = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming the auth middleware sets req.user
@@ -151,5 +191,6 @@ export {
   getRecipesByDiet,
   getRecipeById,
   likeRecipe,
+  unlikeRecipe,
   getUserLikes,
 };

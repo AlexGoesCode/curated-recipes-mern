@@ -1,4 +1,4 @@
-import { Fragment, useRef } from 'react';
+import { useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
   Disclosure,
@@ -89,7 +89,7 @@ const Navbar = () => {
                 <div className='flex flex-shrink-0 items-center'></div>
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
-                    <label htmlFor='avatar-file'>select file</label>
+                    {/* <label htmlFor='avatar-file'>select file</label> */}
                     <input
                       type='file'
                       name='avatar-file'

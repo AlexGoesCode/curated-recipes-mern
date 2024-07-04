@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 
 interface LikeButtonProps {
   recipeId: string;
-
   isLiked: boolean;
   fetchData: () => Promise<void>;
 }
@@ -20,10 +19,6 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
     console.log('user :>> ', user);
     console.log('recipeId :>> ', recipeId);
     console.log('isLiked :>> ', isLiked);
-    if (isLiked) {
-      alert('you already liked this recipe');
-      return;
-    }
 
     try {
       const myHeaders = new Headers();
@@ -32,34 +27,36 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
         'Authorization',
         `Bearer ${localStorage.getItem('token')}`
       );
+
       const urlencoded = new URLSearchParams();
       urlencoded.append('recipeId', recipeId);
-      urlencoded.append('userId', user?.id);
+      urlencoded.append('userId', user?.id ?? '');
 
       if (!user?.id || !recipeId) {
-        alert('you need to login first to like a recipe');
+        alert('you need to login first to like/unlike a recipe');
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:5022/api/curated-recipes/${recipeId}/like`,
-        {
-          method: 'POST',
-          headers: myHeaders,
-          body: urlencoded,
-        }
-      );
+      const url = `http://localhost:5022/api/curated-recipes/${recipeId}/${
+        isLiked ? 'unlike' : 'like'
+      }`;
+      const method = isLiked ? 'DELETE' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: myHeaders,
+        body: urlencoded,
+      });
 
       if (response.ok) {
         const data = await response.json();
-
-        console.log('recipe liked', data);
+        console.log(`${isLiked ? 'recipe unliked' : 'recipe liked'}`, data);
         fetchData();
       } else {
-        console.log("can't like recipe");
+        console.log(`can't ${isLiked ? 'unlike' : 'like'} recipe`);
       }
     } catch (error) {
-      console.error('Error liking recipe:', error);
+      console.error(`Error ${isLiked ? 'unliking' : 'liking'} recipe:`, error);
     }
   };
 
@@ -69,7 +66,6 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
         isLiked ? 'bg-red-500 text-white' : 'bg-gray-300'
       }`}
       onClick={handleLike}
-      // disabled={isLiked}
     >
       {isLiked ? 'Liked' : 'Like'}
     </button>

@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 const SavedRecipes = () => {
   const { user } = useAuth();
+  const [likedRecipes, setLikedRecipes] = useState<Recipe[]>([]);
   // check if user is null and return an alternative UI or null
   if (!user) {
     return <div>Please log in to see saved recipes</div>;
