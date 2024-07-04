@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Recipe, SingleRecipeOkResponse } from '../types/Types';
 
@@ -6,6 +6,7 @@ function SingleRecipe() {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { recipeid } = useParams<{ recipeid: string }>();
+  const navigate = useNavigate();
 
   const fetchRecipe = async () => {
     const url = `http://localhost:5022/api/curated-recipes/${recipeid}`;
@@ -57,6 +58,10 @@ function SingleRecipe() {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   if (error) {
     return <div style={{ color: 'white' }}>Error: {error}</div>;
   }
@@ -76,6 +81,12 @@ function SingleRecipe() {
           />
         </div>
         <div className='px-8 py-4 font-outfit text-wenge-brown md:w-1/2'>
+          <button
+            className='relative top-0 end-12  bg-rose-white-100 p-2 rounded-full'
+            onClick={handleBack}
+          >
+            Back
+          </button>
           <h1 className='font-fancy text-3xl mt-8 text-dark-charcoal'>
             {recipe.name}
           </h1>
