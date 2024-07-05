@@ -12,18 +12,16 @@ import { multerUpload } from '../middleware/multer.js';
 
 const router = express.Router();
 
-//! keep requests grouped per request type
-// router.get('/likes', authMiddleware, getUserLikes);
-router.get('/likes', authMiddleware, getUserLikes);
 router.post('/register', multerUpload.single('avatar'), registerUser);
 router.post('/login', loginUser);
-router.get('/testAuth', authMiddleware, testAuth);
 router.post(
   '/upload-avatar',
   authMiddleware,
   multerUpload.single('avatar'),
   uploadAvatar
 );
+router.get('/likes', authMiddleware, getUserLikes);
 router.get('/profile', authMiddleware, getUserProfile);
+router.get('/testAuth', authMiddleware, testAuth);
 
 export default router;

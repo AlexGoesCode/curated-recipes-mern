@@ -204,6 +204,18 @@ const getUserLikes = async (req, res) => {
   }
 };
 
+// const rating = asyncHandler(async (req, res) => {
+//   const { _id } = req.user;
+//   const { star, recipeId } = req.body;
+//   const recipe = await Recipe.findById(recipeId);
+//   let alreadyRated = recipe.ratings.find(
+//     (userId) => userId.postedby.toString() === _id.toString()
+//   );
+//   if (alreadyRated) {
+//     return res.status(400).json({ message: 'Recipe already rated' });
+//   } //* CONTINUE RATING CODE
+// });
+
 export {
   allRecipes,
   createRecipe,
@@ -214,4 +226,5 @@ export {
   likeRecipe,
   unlikeRecipe,
   getUserLikes,
+  // rating,
 };

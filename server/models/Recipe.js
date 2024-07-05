@@ -7,11 +7,11 @@ const recipeSchema = new Schema(
     origin: { type: String, required: true },
     ingredients: { type: [String], required: true },
     instructions: { type: String, required: true },
-    // likes: { type: Number, default: 0 },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     picture: { type: String },
     diet: { type: String },
     difficulty: { type: String },
+    // totalrating: { type: string, default: 0 },
   },
   { timestamps: true }
 );
