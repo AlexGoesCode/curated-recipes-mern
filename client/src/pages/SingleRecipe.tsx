@@ -111,7 +111,7 @@ function SingleRecipe() {
                   clipRule='evenodd'
                 />
               </svg>
-              {recipe.likes}
+              {recipe.likes.length}
             </div>
           </article>
           <div className='mt-8'>

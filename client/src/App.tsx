@@ -21,8 +21,8 @@ function App() {
   // }, []);
 
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div
           className='relative h-screen bg-cover bg-center flex flex-col min-h-screen saturate-100'
           style={{ backgroundImage: `url(${DesktopImage})` }}
@@ -34,8 +34,8 @@ function App() {
           </div>
           <FlowFooter />
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

@@ -7,8 +7,6 @@ import { useAuth } from '../context/AuthContext';
 const SavedRecipes = () => {
   const { user, getUserProfile } = useAuth();
 
-  // const [likedRecipes, setLikedRecipes]
-  // check if user is null and return an alternative UI or null
   if (!user) {
     return <div>Please log in to see saved recipes</div>;
   }

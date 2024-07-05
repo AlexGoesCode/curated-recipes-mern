@@ -19,7 +19,8 @@ const CreateRecipe = () => {
 
   const { setError, error } = useAuth();
   const navigate: NavigateFunction = useNavigate();
-  const [imageFile, setImageFile] = useState<File | null>(null); // STATE FOR IMAGE FILE
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false); //* NEW
 
   const handleIngredientChange = (index: number, value: string) => {
     const newIngredients = [...recipe.ingredients];
@@ -42,72 +43,49 @@ const CreateRecipe = () => {
     }
   };
 
-  const handleImageUpload = async () => {
-    if (!imageFile) return;
+  const handleSubmit = async () => {
+    console.log(
+      'typeof recipe.ingredients :>> ',
+      recipe.ingredients instanceof Array
+    );
+    console.log(' recipe.ingredients :>> ', recipe.ingredients);
 
+    if (!imageFile) return alert('You need to select an image'); //*
+
+    setIsUploading(true); //*
+    console.log('recipe :>> ', recipe);
+    console.log('picture :>> ', imageFile);
     const formData = new FormData();
     formData.append('name', recipe.name);
     formData.append('origin', recipe.origin);
-    formData.append('ingredients', 'bacon, pecorino');
-    formData.append('instructions', 'dont use cream');
-    formData.append('diet', 'Vegan');
-    formData.append('difficulty', 'Easy');
-    formData.append('image', imageFile);
+    formData.append('ingredients', recipe.ingredients.join(','));
+    formData.append('instructions', recipe.instructions);
+    formData.append('diet', recipe.diet);
+    formData.append('difficulty', recipe.difficulty);
+    formData.append('picture', imageFile);
 
     try {
-      const response = await fetch('http://localhost:5022/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'http://localhost:5022/api/curated-recipes/new-recipe',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to upload image');
       }
 
       const result = await response.json();
-      setRecipe({ ...recipe, picture: result.imageUrl });
+      // setRecipe({ ...recipe, picture: result.imageUrl });
+      setIsUploading(false); //* NEW
+      alert('Recipe created successfully');
     } catch (err) {
       const error = err as Error;
       console.error('Error occurred during image upload', error);
       setError(error.message);
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const recipeData = {
-      ...recipe,
-    };
-
-    console.log('Submitting recipe:', recipeData);
-
-    try {
-      const response = await fetch(
-        'http://localhost:5022/api/curated-recipes',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(recipeData),
-        }
-      );
-
-      console.log('Response received', response);
-
-      if (!response.ok) {
-        throw new Error('Failed to create recipe');
-      }
-
-      const result = await response.json();
-      console.log('Recipe created', result);
-
-      navigate('/recipes');
-    } catch (err) {
-      const error = err as Error;
-      console.error('Error occurred', error);
-      setError(error.message);
+      setIsUploading(false); //* NEW
     }
   };
 
@@ -247,73 +225,45 @@ const CreateRecipe = () => {
 
         <div>
           <label
-            htmlFor='difficulty'
-            className='block text-sm font-medium leading-6 text-gray-100'
-          >
-            Difficulty
-          </label>
-          <div className='mt-2'>
-            <select
-              id='difficulty'
-              name='difficulty'
-              required
-              value={recipe.difficulty}
-              onChange={(e) =>
-                setRecipe({
-                  ...recipe,
-                  difficulty: e.target.value as Recipe['difficulty'],
-                })
-              }
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
-            >
-              <option value='easy'>Easy</option>
-              <option value='medium'>Medium</option>
-              <option value='hard'>Hard</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label
             htmlFor='picture'
             className='block text-sm font-medium leading-6 text-gray-100'
           >
             Image URL
           </label>
           <div className='mt-2 flex items-center space-x-2'>
-            <input
-              id='picture'
-              name='picture'
-              type='text'
-              required
-              value={recipe.picture}
-              onChange={(e) =>
-                setRecipe({ ...recipe, picture: e.target.value })
-              }
-              className='flex-1 block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-            />
+            {/* <label
+              // htmlFor='fileInput'
+              className='rounded-md bg-blue-600 px-2 py-1 text-red'
+              style={{
+                border: '1px solid #ccc',
+                display: 'inline-block',
+                padding: '6px 12px',
+                cursor: 'pointer',
+              }}
+            > */}
             <input
               type='file'
               accept='image/*'
               onChange={handleImageChange}
-              className='hidden'
+              // className='none'
               id='fileInput'
+              name='fileInput'
+              // style={{ display: 'none' }}
             />
-            <button
-              type='button'
-              onClick={() => document.getElementById('fileInput')?.click()}
-              className='rounded-md bg-blue-600 px-2 py-1 text-white'
-            >
-              Choose File
-            </button>
-            <button
-              type='button'
-              onClick={handleImageUpload}
-              className='rounded-md bg-green-600 px-2 py-1 text-white'
-            >
-              Upload
-            </button>
+            {/* Upload a picture
+            </label> */}
           </div>
+          {console.log('isUploading', isUploading)}
+          {isUploading && (
+            <div
+              className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]'
+              role='status'
+            >
+              <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
+                Loading...
+              </span>
+            </div>
+          )}
         </div>
 
         {error && <div className='text-red-500 text-sm'>{error}</div>}

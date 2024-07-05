@@ -34,9 +34,9 @@ export const registerUser = async (req, res) => {
           avatar: avatar,
         });
         const savedUser = await newUser.save();
-        //! if you want to leave the user logged in after registration,
-        //! generate the token with the user id, and include the token in the response.
-        //! In the client, save the token in local storage.
+        //* if you want to leave the user logged in after registration,
+        //* generate the token with the user id, and include the token in the response.
+        //* In the client, save the token in local storage.
         res.status(201).json({
           message: 'user registered successfully',
           user: savedUser,
@@ -100,7 +100,7 @@ export const uploadAvatar = async (req, res) => {
   console.log('req.file :>> ', req.file);
   // console.log('req.user :>> ', req.user);
   try {
-    const userId = req.user._id; // Assuming `req.user.sub` contains the user ID from the auth middleware
+    const userId = req.user._id;
     try {
       const avatar = await imageUpload(req.file, 'user-avatars');
       console.log('avatar :>> ', avatar);

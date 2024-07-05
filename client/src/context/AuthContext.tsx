@@ -10,6 +10,7 @@ import {
   LoginAndSignUpResponse,
   UserType,
 } from '../types/Types';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -28,6 +29,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
         const result = (await response.json()) as LoginAndSignUpResponse;
         console.log('result :>> ', result);
+        navigate('/recipes');
         if (!result.token) {
           alert('you need to login first');
           return;
@@ -69,10 +72,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(result.user);
           // setAvatarUrl(result.user.avatar);
           setIsAuthenticated(true);
+          setIsLoading(false);
         }
       }
     } catch (error) {
       console.log('error :>> ', error);
+      setIsLoading(false);
     }
 
     setError(null);
@@ -102,7 +107,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         'http://localhost:5022/api/user/profile',
         requestOptions
       );
+      if (!response.ok && response.status === 401) {
+        localStorage.removeItem('token');
+        setIsLoading(false);
+        setIsAuthenticated(false);
 
+        // alert('you need to login ');
+        navigate('/login');
+        return;
+      }
       const result = (await response.json()) as GetProfileOkResponse;
       console.log('result profile', result);
       setUser(result.user);
@@ -121,7 +134,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      alert('you need to login first');
+      // alert('you need to login first');
     }
   }, []);
 

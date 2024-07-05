@@ -31,7 +31,7 @@ function GridList({
   return (
     <div className='p-4'>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-4'>
-        {items.slice(0, 5).map((item) => (
+        {items.map((item) => (
           <GridItem
             key={item._id}
             item={item}
@@ -40,16 +40,7 @@ function GridList({
           />
         ))}
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
-        {items.slice(5, 10).map((item) => (
-          <GridItem
-            key={item._id}
-            item={item}
-            isLiked={item._id ? item.likes.includes(user!.id) : false} // Check if _id is defined
-            fetchData={fetchData}
-          />
-        ))}
-      </div>
+
       {totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

@@ -7,7 +7,9 @@ import { imageUpload } from '../utils/imageUpload.js';
 const allRecipes = async (req, res) => {
   try {
     const allRecipes = await RecipeModel.find({});
+
     res.status(200).json({ number: allRecipes.length, allRecipes });
+    console.log('recipiesResponse :>> ', recipiesResponse);
   } catch (error) {
     console.error('Error fetching recipes:', error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -19,6 +21,7 @@ const createRecipe = async (req, res) => {
 
   //!transforming the ingredients string into an array
   const arrayOfIngredients = req.body.ingredients.split(',');
+  console.log('arrayOfIngredients :>> ', arrayOfIngredients);
   console.log('req.file :>> ', req.file);
   if (req.file) {
     const uploadedFile = await imageUpload(req.file, 'recipe-images');
@@ -33,7 +36,7 @@ const createRecipe = async (req, res) => {
         diet: req.body.diet,
       });
       const savedRecipe = await newRecipe.save();
-      res.status(201).json(savedRecipe);
+      return res.status(201).json(savedRecipe);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -41,13 +44,24 @@ const createRecipe = async (req, res) => {
 };
 
 const getRecipesByName = async (req, res) => {
+  //* Some code to build the pagination :1
+  //the variables below woudl need to be recieved from the front end in the request. And change accordinglly to the next/prev page button clicked by the user.
+  // const finalRecipe = 5;
+  // const initialRecipe = 0;
+
   try {
     const name = req.query.name;
     const recipes = await RecipeModel.find({
       name: { $regex: name, $options: 'i' },
     });
+    //* Some code to build the pagination :2
+    //the variable recipiesResponse below, would use .slice() and the numbers finalRecipe and intialRecipe, to create a new array with the number of recipies we want to display in the page.
+    // const recipiesResponse = recipes.slice(initialRecipe, numberOfRecipes);
     if (recipes.length) {
       res.status(200).json(recipes);
+      //* Some code to build the pagination :3
+      // the response below would send the array of LIMITED recipies to the front end.
+      // res.status(200).json(recipiesResponse);
     } else {
       res.status(404).json({ message: 'No recipes found with that name' });
     }

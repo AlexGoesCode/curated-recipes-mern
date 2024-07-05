@@ -15,6 +15,7 @@ const FlowFooter = () => {
         by='Flavour:Dance!'
         year={2024}
       />
+
       <Footer.LinkGroup className='text-gray-300 font-medium text-sm'>
         <Footer.Link href='#'>About</Footer.Link>
         <Footer.Link href='#'>Privacy Policy</Footer.Link>
