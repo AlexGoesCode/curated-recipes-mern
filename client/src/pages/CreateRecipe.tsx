@@ -11,7 +11,7 @@ const CreateRecipe = () => {
     origin: '',
     diet: 'none',
     difficulty: 'easy',
-    imageUrl: '',
+    picture: '',
     ingredients: [''],
     instructions: '',
     likes: [],
@@ -19,6 +19,7 @@ const CreateRecipe = () => {
 
   const { setError, error } = useAuth();
   const navigate: NavigateFunction = useNavigate();
+  const [imageFile, setImageFile] = useState<File | null>(null); // STATE FOR IMAGE FILE
 
   const handleIngredientChange = (index: number, value: string) => {
     const newIngredients = [...recipe.ingredients];
@@ -33,6 +34,43 @@ const CreateRecipe = () => {
   const removeIngredient = (index: number) => {
     const newIngredients = recipe.ingredients.filter((_, i) => i !== index);
     setRecipe({ ...recipe, ingredients: newIngredients });
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImageFile(event.target.files[0]);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!imageFile) return;
+
+    const formData = new FormData();
+    formData.append('name', recipe.name);
+    formData.append('origin', recipe.origin);
+    formData.append('ingredients', 'bacon, pecorino');
+    formData.append('instructions', 'dont use cream');
+    formData.append('diet', 'Vegan');
+    formData.append('difficulty', 'Easy');
+    formData.append('image', imageFile);
+
+    try {
+      const response = await fetch('http://localhost:5022/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+
+      const result = await response.json();
+      setRecipe({ ...recipe, picture: result.imageUrl });
+    } catch (err) {
+      const error = err as Error;
+      console.error('Error occurred during image upload', error);
+      setError(error.message);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -237,23 +275,44 @@ const CreateRecipe = () => {
 
         <div>
           <label
-            htmlFor='imageUrl'
+            htmlFor='picture'
             className='block text-sm font-medium leading-6 text-gray-100'
           >
             Image URL
           </label>
-          <div className='mt-2'>
+          <div className='mt-2 flex items-center space-x-2'>
             <input
-              id='imageUrl'
-              name='imageUrl'
+              id='picture'
+              name='picture'
               type='text'
               required
-              value={recipe.imageUrl}
+              value={recipe.picture}
               onChange={(e) =>
-                setRecipe({ ...recipe, imageUrl: e.target.value })
+                setRecipe({ ...recipe, picture: e.target.value })
               }
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+              className='flex-1 block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
+            <input
+              type='file'
+              accept='image/*'
+              onChange={handleImageChange}
+              className='hidden'
+              id='fileInput'
+            />
+            <button
+              type='button'
+              onClick={() => document.getElementById('fileInput')?.click()}
+              className='rounded-md bg-blue-600 px-2 py-1 text-white'
+            >
+              Choose File
+            </button>
+            <button
+              type='button'
+              onClick={handleImageUpload}
+              className='rounded-md bg-green-600 px-2 py-1 text-white'
+            >
+              Upload
+            </button>
           </div>
         </div>
 

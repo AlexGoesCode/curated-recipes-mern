@@ -16,6 +16,7 @@ const Recipes = () => {
 
   // Fetch data based on searchTerm, searchBy, and currentPage
   const fetchData = async () => {
+    console.log('%c fetching recipes', 'color: red');
     try {
       const response = await fetch(
         `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}`

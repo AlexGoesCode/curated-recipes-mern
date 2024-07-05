@@ -2,6 +2,7 @@ import RecipeModel from '../models/Recipe.js';
 import Like from '../models/Like.js';
 import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
+import { imageUpload } from '../utils/imageUpload.js';
 
 const allRecipes = async (req, res) => {
   try {
@@ -14,12 +15,28 @@ const allRecipes = async (req, res) => {
 };
 
 const createRecipe = async (req, res) => {
-  try {
-    const newRecipe = new RecipeModel(req.body);
-    const savedRecipe = await newRecipe.save();
-    res.status(201).json(savedRecipe);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  console.log('req.body :>> ', req.body);
+
+  //!transforming the ingredients string into an array
+  const arrayOfIngredients = req.body.ingredients.split(',');
+  console.log('req.file :>> ', req.file);
+  if (req.file) {
+    const uploadedFile = await imageUpload(req.file, 'recipe-images');
+    try {
+      const newRecipe = new RecipeModel({
+        name: req.body.name,
+        origin: req.body.origin,
+        ingredients: arrayOfIngredients,
+        instructions: req.body.instructions,
+        picture: uploadedFile,
+        difficulty: req.body.difficulty,
+        diet: req.body.diet,
+      });
+      const savedRecipe = await newRecipe.save();
+      res.status(201).json(savedRecipe);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
 };
 
@@ -133,28 +150,32 @@ const likeRecipe = async (req, res) => {
 
 const unlikeRecipe = async (req, res) => {
   const { userId, recipeId } = req.body;
-
+  // console.log('req.body :>> ', req.body);
   try {
     const recipeToUnlike = await Recipe.findOne({ _id: recipeId });
     const isRecipeLiked = recipeToUnlike.likes.includes(userId) ? true : false;
+    // console.log('isRecipeLiked :>> ', isRecipeLiked);
     if (!isRecipeLiked) {
       return res
         .status(400)
         .json({ message: 'You have not liked this recipe yet' });
     }
 
-    const removeLikeFromRecipe = await Recipe.findByIdAndUpdate(
-      recipeId,
-      {
-        $pull: { likes: userId },
-      },
-      { new: true }
-    );
-
     const removeLikeFromUserLikedRecipes = await User.findByIdAndUpdate(
       userId,
       {
         $pull: { likedRecipes: recipeId },
+      },
+      { new: true }
+    );
+    console.log(
+      'removeLikeFromUserLikedRecipes :>> ',
+      removeLikeFromUserLikedRecipes
+    );
+    const removeLikeFromRecipe = await Recipe.findByIdAndUpdate(
+      recipeId,
+      {
+        $pull: { likes: userId },
       },
       { new: true }
     );

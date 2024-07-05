@@ -22,6 +22,7 @@ interface AuthContextType {
   // updateUserAvatar: (url: string) => void;
   // token: string | null;
   getUserProfile: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   // const [avatarUrl, setAvatarUrl] = useState('');
 
   const login = async (email: string, password: string) => {
@@ -104,8 +106,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = (await response.json()) as GetProfileOkResponse;
       console.log('result profile', result);
       setUser(result.user);
+      setIsLoading(false);
     } catch (error) {
       console.log('error getting profile :>> ', error);
+      setIsLoading(false);
     }
   };
 
@@ -142,6 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // avatarUrl,
         user,
         getUserProfile,
+        isLoading,
       }}
     >
       {children}

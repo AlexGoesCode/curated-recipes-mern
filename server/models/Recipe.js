@@ -9,6 +9,9 @@ const recipeSchema = new Schema(
     instructions: { type: String, required: true },
     // likes: { type: Number, default: 0 },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    picture: { type: String },
+    diet: { type: String },
+    difficulty: { type: String },
   },
   { timestamps: true }
 );

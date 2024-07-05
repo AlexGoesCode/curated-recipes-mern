@@ -8,7 +8,7 @@ interface LikeButtonProps {
 }
 
 const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
-  const { user } = useAuth();
+  const { user, getUserProfile } = useAuth();
   console.log('isLiked :>> ', isLiked);
 
   const handleLike = async (
@@ -52,6 +52,7 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
         const data = await response.json();
         console.log(`${isLiked ? 'recipe unliked' : 'recipe liked'}`, data);
         fetchData();
+        getUserProfile();
       } else {
         console.log(`can't ${isLiked ? 'unlike' : 'like'} recipe`);
       }

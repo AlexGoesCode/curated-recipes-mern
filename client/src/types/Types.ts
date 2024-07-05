@@ -6,7 +6,8 @@ export type Recipe = {
   instructions: string;
   difficulty: 'easy' | 'medium' | 'hard';
   likes: string[];
-  imageUrl: string;
+
+  picture: string;
   diet: 'none' | 'vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free'; // Match the schema exactly
 };
 

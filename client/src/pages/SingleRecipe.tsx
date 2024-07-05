@@ -75,7 +75,7 @@ function SingleRecipe() {
       <article className='bg-white rounded-3xl w-1/2 flex flex-col md:flex-row'>
         <div className='md:w-1/2 flex justify-center items-center p-4'>
           <img
-            src={recipe.imageUrl}
+            src={recipe.picture}
             alt={`Photo of ${recipe.name}`}
             className='max-w-full h-auto rounded-2xl'
           />

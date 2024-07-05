@@ -14,10 +14,10 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
 
   return (
     <div className='p-4 border rounded shadow-md cursor-pointer'>
-      {item.imageUrl && (
+      {item.picture && (
         <Link to={`/recipes/${item._id}`}>
           <img
-            src={item.imageUrl}
+            src={item.picture}
             alt={item.name}
             className='w-full h-48 object-cover rounded-md'
           />

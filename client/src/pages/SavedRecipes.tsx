@@ -5,8 +5,9 @@ import GridList from '../components/GridList';
 import { useAuth } from '../context/AuthContext';
 
 const SavedRecipes = () => {
-  const { user } = useAuth();
-  const [likedRecipes, setLikedRecipes] = useState<Recipe[]>([]);
+  const { user, getUserProfile } = useAuth();
+
+  // const [likedRecipes, setLikedRecipes]
   // check if user is null and return an alternative UI or null
   if (!user) {
     return <div>Please log in to see saved recipes</div>;
@@ -16,16 +17,7 @@ const SavedRecipes = () => {
 
   // Adjust fetchData to match expected signature in GridListProps
   const fetchData = async () => {
-    const page = 1; // Example fixed page number, adjust as needed
-    try {
-      const response = await fetch(
-        `http://localhost:5022/api/curated-recipes/recipesbyid?userId=${user.id}&page=${page}`
-      );
-      const data = await response.json();
-      console.log(`Fetched data for page ${page}:`, data);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    }
+    getUserProfile();
   };
 
   return (
