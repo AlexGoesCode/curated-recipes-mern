@@ -85,17 +85,17 @@ function SingleRecipe() {
         </div>
         <div className='relative px-8 py-4 font-outfit text-wenge-brown md:w-1/2'>
           <button
-            className='absolute top-4 right-6  bg-orange-400 p-2 rounded-full'
+            className='absolute top-4 right-6 w-20 bg-orange-400 p-2 rounded-full'
             onClick={handleBack}
           >
             Back
           </button>
-          <h1 className='font-fancy text-4xl text-center mb-10 text-dark-charcoal'>
+          <h1 className='font-fancy text-4xl text-center mt-20 mb-4 text-dark-charcoal'>
             {recipe.name}
           </h1>
-          <div className='flex justify-between mb-16 text-xl'>
+          <div className='flex justify-between mb-16 text-xl '>
             <p className='mt-6'>Origin: {recipe.origin}</p>
-            <p className='mt-6'>Diet: {recipe.diet}</p>
+            <p className='mt-6 m-5'>Diet: {recipe.diet}</p>
           </div>
           <div className='flex justify-between mb-16'>
             <div className='w-1/2 pr-2'>

@@ -19,7 +19,7 @@ const Recipes = () => {
     console.log('%c fetching recipes', 'color: red');
     try {
       const response = await fetch(
-        `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}`
+        `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=10`
       );
       const data = await response.json();
       console.log('Fetched data:', data);

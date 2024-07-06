@@ -26,7 +26,7 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
       <h3 className='text-lg font-bold mt-2 text-gray-100'>{item.name}</h3>
       <p className='text-gray-100'>{item.origin}</p>
 
-      <p className='text-gray-100'>Likes Number:{item.likes?.length}</p>
+      <p className='text-gray-100'>{item.likes?.length} Likes</p>
 
       <div className='absolute bottom-2 right-2 '>
         <LikeButton

@@ -63,7 +63,7 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
 
   return (
     <button
-      className={`mt-2 px-4 py-2 rounded ${
+      className={`mt-2 px-4 py-2 rounded-lg ${
         isLiked ? 'bg-red-500 text-white' : 'bg-gray-300'
       }`}
       onClick={handleLike}

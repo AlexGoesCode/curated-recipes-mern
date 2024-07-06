@@ -20,7 +20,7 @@ const SavedRecipes = () => {
 
   return (
     <div>
-      <h1 className='text-center text-3xl my-4'>Saved Recipes</h1>
+      <h1>Saved Recipes</h1>
       <GridList
         items={user.likedRecipes.map((recipe: Recipe) => recipe)}
         totalPages={1}

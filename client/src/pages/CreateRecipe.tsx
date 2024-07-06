@@ -95,6 +95,7 @@ const CreateRecipe = () => {
       buttonText='Create Recipe'
       onButtonClick={handleSubmit}
       showSignupLink={false}
+      buttonClassName='text-xl'
     >
       <div className='space-y-2 -mt-5'>
         <div>

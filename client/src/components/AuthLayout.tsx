@@ -6,6 +6,7 @@ interface AuthLayoutProps {
   onButtonClick: (event: React.FormEvent) => void; // expects an event
   children?: React.ReactNode;
   showSignupLink?: boolean; // Add this prop
+  buttonClassName?: string;
 }
 
 const AuthLayout = ({
