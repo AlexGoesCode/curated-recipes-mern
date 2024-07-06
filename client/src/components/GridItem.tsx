@@ -13,13 +13,13 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
   const { user } = useAuth();
 
   return (
-    <div className='p-4 border rounded shadow-md cursor-pointer'>
+    <div className='relative bg-gray-900 bg-opacity-50 max-w-60 p-4 border rounded-2xl shadow-md cursor-pointer'>
       {item.picture && (
         <Link to={`/recipes/${item._id}`}>
           <img
             src={item.picture}
             alt={item.name}
-            className='w-full h-48 object-cover rounded-md'
+            className='w-full h-48 object-cover rounded-xl'
           />
         </Link>
       )}
@@ -27,13 +27,16 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
       <p className='text-gray-100'>{item.origin}</p>
 
       <p className='text-gray-100'>Likes Number:{item.likes?.length}</p>
-      <LikeButton
-        recipeId={item._id}
-        // userId={'your-user-id'} // Replace with dynamic user ID if available
-        isLiked={isLiked}
-        // Pass down the handleLike function
-        fetchData={fetchData}
-      />
+
+      <div className='absolute bottom-2 right-2 '>
+        <LikeButton
+          recipeId={item._id}
+          // userId={'your-user-id'} // Replace with dynamic user ID if available
+          isLiked={isLiked}
+          // Pass down the handleLike function
+          fetchData={fetchData}
+        />
+      </div>
     </div>
   );
 };

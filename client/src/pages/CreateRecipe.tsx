@@ -100,7 +100,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='name'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Recipe Name
           </label>
@@ -120,7 +120,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='origin'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Country of Origin
           </label>
@@ -140,7 +140,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='diet'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Diet Type
           </label>
@@ -167,7 +167,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='ingredients'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Ingredients
           </label>
@@ -194,9 +194,9 @@ const CreateRecipe = () => {
             <button
               type='button'
               onClick={addIngredient}
-              className='rounded-md bg-green-600 px-2 py-1 text-white'
+              className='rounded-md text-sm bg-green-600 px-2 py-1 text-white'
             >
-              Add Ingredient
+              Add additional Row
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='instructions'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Instructions
           </label>
@@ -226,7 +226,7 @@ const CreateRecipe = () => {
         <div>
           <label
             htmlFor='picture'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-md font-medium leading-6 text-gray-100'
           >
             Image URL
           </label>
@@ -253,7 +253,7 @@ const CreateRecipe = () => {
             {/* Upload a picture
             </label> */}
           </div>
-          {console.log('isUploading', isUploading)}
+          {/* {console.log('isUploading', isUploading)} */}
           {isUploading && (
             <div
               className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]'

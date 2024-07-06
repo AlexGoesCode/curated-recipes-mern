@@ -37,7 +37,7 @@ function SearchBar({
   }
 
   return (
-    <form className='max-w-xl mx-auto my-10' onSubmit={handleSubmit}>
+    <form className='max-w-xl mx-auto my-8' onSubmit={handleSubmit}>
       <div className='flex'>
         <select
           id='dropdown-button'

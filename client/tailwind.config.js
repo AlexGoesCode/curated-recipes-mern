@@ -12,7 +12,12 @@ export default {
         'custom-image': 'url("./assets/spices.png")',
       },
     },
-
+    // screens: {
+    //   'custom-sm': '500px',
+    //   'custom-md': '750px',
+    //   'custom-lg': '1000px',
+    //   'custom-xl': '1300px',
+    // },
     container: {
       center: true,
     },
