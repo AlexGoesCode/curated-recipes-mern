@@ -10,8 +10,8 @@ import {
   MenuItem,
   MenuItems,
 } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Link, NavLink } from 'react-router-dom';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -99,19 +99,21 @@ const Navbar = () => {
                       onChange={handleAvatarChange}
                     />
                     {navigation.map((item) => (
-                      <Link
+                      <NavLink
                         key={item.name}
                         to={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
+                        className={({ isActive }) =>
+                          classNames(
+                            isActive
+                              ? 'bg-gray-900 text-white'
+                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'rounded-md px-3 py-2 text-sm font-medium'
+                          )
+                        }
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
