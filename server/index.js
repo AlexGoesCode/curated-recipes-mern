@@ -9,6 +9,7 @@ import { cloudinaryConfig } from './config/cloudinary.js';
 
 dotenv.config();
 
+//* Add the middleware functions by calling app.use()
 const addMiddlewares = (app) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -16,6 +17,7 @@ const addMiddlewares = (app) => {
   cloudinaryConfig();
 };
 
+//* Start the server by calling app.listen()
 const startServer = (app) => {
   const port = process.env.PORT || 5022;
   app.listen(port, () => {
@@ -28,6 +30,7 @@ const loadRoutes = (app) => {
   app.use('/api/curated-recipes', recipesRouter);
 };
 
+//* Connect to the MongoDB database by calling mongoose.connect()
 const DBConnection = async () => {
   try {
     await mongoose.connect(process.env.MONGO_DB);
@@ -37,6 +40,7 @@ const DBConnection = async () => {
   }
 };
 
+//*
 (async function controller() {
   const app = express();
   await DBConnection();

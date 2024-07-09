@@ -12,6 +12,7 @@ import { multerUpload } from '../middleware/multer.js';
 
 const router = express.Router();
 
+//* Define the routes for the user API
 router.post('/register', multerUpload.single('avatar'), registerUser);
 router.post('/login', loginUser);
 router.post(

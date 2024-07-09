@@ -6,6 +6,7 @@ import { Recipe } from '../types/Types';
 
 const CreateRecipe = () => {
   const [recipe, setRecipe] = useState<Recipe>({
+    //* match the schema exactly
     _id: '',
     name: '',
     origin: '',
@@ -20,7 +21,7 @@ const CreateRecipe = () => {
   const { setError, error } = useAuth();
   const navigate: NavigateFunction = useNavigate();
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false); //* NEW
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleIngredientChange = (index: number, value: string) => {
     const newIngredients = [...recipe.ingredients];
@@ -33,12 +34,13 @@ const CreateRecipe = () => {
   };
 
   const removeIngredient = (index: number) => {
-    const newIngredients = recipe.ingredients.filter((_, i) => i !== index);
+    const newIngredients = recipe.ingredients.filter((_, i) => i !== index); //* filter out the ingredient at the index
     setRecipe({ ...recipe, ingredients: newIngredients });
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
+      //* if there is a file selected, set the imageFile state
       setImageFile(event.target.files[0]);
     }
   };
@@ -50,8 +52,9 @@ const CreateRecipe = () => {
     );
     console.log(' recipe.ingredients :>> ', recipe.ingredients);
 
-    if (!imageFile) return alert('You need to select an image'); //*
+    if (!imageFile) return alert('You need to select an image');
 
+    //* form data to send to the server
     setIsUploading(true); //*
     console.log('recipe :>> ', recipe);
     console.log('picture :>> ', imageFile);
@@ -77,6 +80,7 @@ const CreateRecipe = () => {
         throw new Error('Failed to upload image');
       }
 
+      //* checks if the response is ok
       const result = await response.json();
       // setRecipe({ ...recipe, picture: result.imageUrl });
       setIsUploading(false); //* NEW

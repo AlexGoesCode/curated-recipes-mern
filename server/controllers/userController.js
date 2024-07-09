@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; //* jwt: to generate tokens
 import User from '../models/User.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'; //* bcrypt: to hash passwords
 import passwordEncryption from '../utils/passwordServices.js';
-import { r } from 'tar';
+// import { r } from 'tar';
 import { imageUpload } from '../utils/imageUpload.js';
 
 export const registerUser = async (req, res) => {
@@ -10,33 +10,35 @@ export const registerUser = async (req, res) => {
   console.log('req.file :>> ', req.file);
 
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }); //* Check if user already exists, by email
     console.log('user :>> ', user);
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
     if (!user) {
-      const hashedPassword = await passwordEncryption(req.body.password);
+      const hashedPassword = await passwordEncryption(req.body.password); //* if user does not exist, hash the password
       if (!hashedPassword) {
         return res
           .status(500)
           .json({ message: 'Server error hashing password' });
       }
+
       if (hashedPassword) {
-        //upload file to cloudinary
+        //* upload file to cloudinary by calling the imageUpload function
         const avatar = await imageUpload(req.file, 'user-avatars');
         console.log('avatar :>> ', avatar);
 
         const newUser = new User({
+          //* create a new user with following properties
           email: req.body.email,
           password: hashedPassword,
           name: req.body.name,
           avatar: avatar,
         });
         const savedUser = await newUser.save();
-        //* if you want to leave the user logged in after registration,
-        //* generate the token with the user id, and include the token in the response.
-        //* In the client, save the token in local storage.
+        // if you want to leave the user logged in after registration,
+        // generate the token with the user id, and include the token in the response.
+        // In the client, save the token in local storage.
         res.status(201).json({
           message: 'user registered successfully',
           user: savedUser,
@@ -54,12 +56,12 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }).populate('likedRecipes');
+    const user = await User.findOne({ email }).populate('likedRecipes'); //* Find user by email and populate the likedRecipes array
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password); //* Compare the password from the request with the hashed password from the database
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: 'Password is incorrect' });
     }
@@ -71,7 +73,7 @@ export const loginUser = async (req, res) => {
         sub: user.id,
       };
 
-      const token = jwt.sign(payload, process.env.JWT_SECRET, options);
+      const token = jwt.sign(payload, process.env.JWT_SECRET, options); //* Generate a token with the user id
       console.log('token :>> ', token);
       res.status(200).json({
         message: 'Login successful',
@@ -92,6 +94,7 @@ export const loginUser = async (req, res) => {
 };
 
 export const testAuth = async (req, res) => {
+  //* Test the auth middleware
   console.log('testing auth');
   console.log('req.user :>> ', req.user);
 };

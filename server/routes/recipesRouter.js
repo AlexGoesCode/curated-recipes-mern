@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  //* Import all the functions from the recipesController
   allRecipes,
   getRecipeById,
   getRecipesByIngredients,
@@ -15,6 +16,7 @@ import { multerUpload } from '../middleware/multer.js';
 
 const recipesRouter = express.Router();
 
+//* Define the routes for the recipes APIxz
 recipesRouter.get('/all', allRecipes);
 recipesRouter.get('/recipesbyingredients', getRecipesByIngredients);
 recipesRouter.get('/recipesbyname', getRecipesByName);

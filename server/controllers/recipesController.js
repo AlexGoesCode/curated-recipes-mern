@@ -4,6 +4,7 @@ import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
 import { imageUpload } from '../utils/imageUpload.js';
 
+//* Function that tries to fetch all recipes from the model. -> 200 or 500
 const allRecipes = async (req, res) => {
   try {
     const allRecipes = await RecipeModel.find({});
@@ -16,13 +17,16 @@ const allRecipes = async (req, res) => {
   }
 };
 
+//* Function that tries to create a new recipe from the request body. -> 201 or 400
 const createRecipe = async (req, res) => {
   console.log('req.body :>> ', req.body);
 
-  //!transforming the ingredients string into an array
+  //* splits the ingredients string into an array
   const arrayOfIngredients = req.body.ingredients.split(',');
   console.log('arrayOfIngredients :>> ', arrayOfIngredients);
   console.log('req.file :>> ', req.file);
+
+  //* If there is a file in the request, upload it to Cloudinary
   if (req.file) {
     const uploadedFile = await imageUpload(req.file, 'recipe-images');
     try {
@@ -35,6 +39,7 @@ const createRecipe = async (req, res) => {
         difficulty: req.body.difficulty,
         diet: req.body.diet,
       });
+
       const savedRecipe = await newRecipe.save();
       return res.status(201).json(savedRecipe);
     } catch (error) {
@@ -43,24 +48,26 @@ const createRecipe = async (req, res) => {
   }
 };
 
+//* Function that tries to fetch recipes by name from the model. -> 200, 404 or 500
 const getRecipesByName = async (req, res) => {
-  //* Some code to build the pagination :1
-  //the variables below woudl need to be recieved from the front end in the request. And change accordinglly to the next/prev page button clicked by the user.
-  // const finalRecipe = 5;
-  // const initialRecipe = 0;
+  /* Some code to build the pagination :1
+  the variables below woudl need to be recieved from the front end in the request. And change accordinglly to the next/prev page button clicked by the user.
+  const finalRecipe = 5;
+  const initialRecipe = 0; */
 
+  //* Fetch the name from the query
   try {
     const name = req.query.name;
     const recipes = await RecipeModel.find({
-      name: { $regex: name, $options: 'i' },
+      name: { $regex: name, $options: 'i' }, //* $regex: MongoDB operator that allows us to search for a string in a field.
     });
-    //* Some code to build the pagination :2
-    //the variable recipiesResponse below, would use .slice() and the numbers finalRecipe and intialRecipe, to create a new array with the number of recipies we want to display in the page.
-    // const recipiesResponse = recipes.slice(initialRecipe, numberOfRecipes);
+    /* Some code to build the pagination :2
+    the variable recipiesResponse below, would use .slice() and the numbers finalRecipe and intialRecipe, to create a new array with the number of recipies we want to display in the page.
+    const recipiesResponse = recipes.slice(initialRecipe, numberOfRecipes);*/
     if (recipes.length) {
       res.status(200).json(recipes);
-      //* Some code to build the pagination :3
-      // the response below would send the array of LIMITED recipies to the front end.
+      /* Some code to build the pagination :3
+      the response below would send the array of LIMITED recipies to the front end.*/
       // res.status(200).json(recipiesResponse);
     } else {
       res.status(404).json({ message: 'No recipes found with that name' });
@@ -75,7 +82,7 @@ const getRecipesByIngredients = async (req, res) => {
   const ingredient = req.query.ingredients;
   try {
     const recipesArray = await RecipeModel.find({
-      ingredients: { $elemMatch: { $in: ingredient } },
+      ingredients: { $elemMatch: { $in: ingredient } }, //* $elemMatch: MongoDB operator allows us to search for a string in an array.
     });
     res.status(200).json(recipesArray);
   } catch (error) {
@@ -84,6 +91,7 @@ const getRecipesByIngredients = async (req, res) => {
   }
 };
 
+//* Recipe by diet filter (needs additional interface to pick diet - toggle or so)
 const getRecipesByDiet = async (req, res) => {
   const diet = req.query.diet;
   try {
@@ -95,10 +103,12 @@ const getRecipesByDiet = async (req, res) => {
   }
 };
 
+//* Function that tries to fetch a recipe by ID from the model. -> 200, 404 or 500
 const getRecipeById = async (req, res) => {
   try {
-    const recipeId = req.params.recipeid;
+    const recipeId = req.params.recipeid; //* req.params.recipeid: ID we fetch from the URL
     const recipe = await RecipeModel.findById(recipeId);
+
     if (!recipe) {
       res.status(404).json({
         message: 'No recipes with this ID',
@@ -121,25 +131,24 @@ const getRecipeById = async (req, res) => {
   }
 };
 
+//* Function that tries to like a recipe. -> 200, 400 or 500
 const likeRecipe = async (req, res) => {
   const { userId, recipeId } = req.body;
 
   try {
-    // Check if the user has already liked the recipe
+    //* Check if the user has already liked the recipe
     const recipeToLike = await Recipe.findOne({ _id: recipeId });
-    const isRecipeLiked = recipeToLike.likes.includes(userId) ? true : false;
+    const isRecipeLiked = recipeToLike.likes.includes(userId) ? true : false; //* Check if user is already in likes array
     if (isRecipeLiked) {
-      //!remove the like.
       return res
         .status(400)
         .json({ message: 'You have already liked this recipe' });
     }
 
-    // Create a new like
     const addLikeToRecipe = await Recipe.findByIdAndUpdate(
       recipeId,
       {
-        $addToSet: { likes: userId },
+        $addToSet: { likes: userId }, //* $addToSet: MongoDB operator that adds a value to an array unless the value is already present.
       },
       { new: true }
     );
@@ -163,10 +172,10 @@ const likeRecipe = async (req, res) => {
 };
 
 const unlikeRecipe = async (req, res) => {
-  const { userId, recipeId } = req.body;
+  const { userId, recipeId } = req.body; //* ID we fetch from the token
   // console.log('req.body :>> ', req.body);
   try {
-    const recipeToUnlike = await Recipe.findOne({ _id: recipeId });
+    const recipeToUnlike = await Recipe.findOne({ _id: recipeId }); //* Find the recipe by ID
     const isRecipeLiked = recipeToUnlike.likes.includes(userId) ? true : false;
     // console.log('isRecipeLiked :>> ', isRecipeLiked);
     if (!isRecipeLiked) {
@@ -178,7 +187,7 @@ const unlikeRecipe = async (req, res) => {
     const removeLikeFromUserLikedRecipes = await User.findByIdAndUpdate(
       userId,
       {
-        $pull: { likedRecipes: recipeId },
+        $pull: { likedRecipes: recipeId }, //* $pull: MongoDB operator: removes a value from an array.
       },
       { new: true }
     );
@@ -189,7 +198,7 @@ const unlikeRecipe = async (req, res) => {
     const removeLikeFromRecipe = await Recipe.findByIdAndUpdate(
       recipeId,
       {
-        $pull: { likes: userId },
+        $pull: { likes: userId }, //* pulls the userId from the likes array
       },
       { new: true }
     );
@@ -207,10 +216,9 @@ const unlikeRecipe = async (req, res) => {
 
 const getUserLikes = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming the auth middleware sets req.user
-
-    const likes = await Like.find({ userId }).populate('recipeId');
-    const likedRecipeIds = likes.map((like) => like.recipeId._id);
+    const userId = req.user.id; //* ID we fetch from the token
+    const likes = await Like.find({ userId }).populate('recipeId'); //* Find the likes by userId and populate the recipeId field by the Recipe model
+    const likedRecipeIds = likes.map((like) => like.recipeId._id); //* Map the likes to get the recipeId
 
     res.status(200).json({ likes: likedRecipeIds });
   } catch (error) {

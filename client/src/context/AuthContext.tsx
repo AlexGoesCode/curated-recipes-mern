@@ -28,7 +28,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+//* AuthProvider component that wraps the entire application and provides the authentication context.
+export const AuthProvider = ({ children }: { children: ReactNode }) => { 
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     console.log(`Logging in with username: ${email} and password: ${password}`);
 
+    //* Headers make sure the content type is set to form data
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
