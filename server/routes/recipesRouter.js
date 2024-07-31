@@ -1,4 +1,7 @@
 import express from 'express';
+import authMiddleware from '../middleware/auth.js';
+import { multerUpload } from '../middleware/multer.js';
+
 import {
   //* Import all the functions from the recipesController
   allRecipes,
@@ -11,12 +14,10 @@ import {
   getUserLikes,
   unlikeRecipe,
 } from '../controllers/recipesController.js';
-import authMiddleware from '../middleware/auth.js';
-import { multerUpload } from '../middleware/multer.js';
 
 const recipesRouter = express.Router();
 
-//* Define the routes for the recipes APIxz
+//* Define the routes for the recipes API
 recipesRouter.get('/all', allRecipes);
 recipesRouter.get('/recipesbyingredients', getRecipesByIngredients);
 recipesRouter.get('/recipesbyname', getRecipesByName);
