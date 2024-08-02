@@ -22,6 +22,12 @@ const SignUp = () => {
 
   const handleSignUp = async () => {
     console.log('username :>> ', username, password);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Invalid email format.');
+      return;
+    }
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
