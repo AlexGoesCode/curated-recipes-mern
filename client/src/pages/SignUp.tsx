@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { LoginAndSignUpResponse } from '../types/Types';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -11,6 +12,7 @@ const SignUp = () => {
   const [avatarName, setAvatarName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { setError, error } = useAuth();
+  const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -25,7 +27,7 @@ const SignUp = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Invalid email format.');
+      setError('Invalid email format, please try again.');
       return;
     }
     if (password !== confirmPassword) {
@@ -67,7 +69,7 @@ const SignUp = () => {
       }
       const result = (await response.json()) as LoginAndSignUpResponse;
       console.log('result :>> ', result);
-      //! redirect to Login page
+      navigate('/login');
     } catch (error) {
       console.error(error);
       setError('An error occurred during sign-up.');

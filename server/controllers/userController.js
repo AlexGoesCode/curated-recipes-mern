@@ -10,13 +10,13 @@ export const registerUser = async (req, res) => {
   console.log('req.file :>> ', req.file);
 
   try {
-    const user = await User.findOne({ email: req.body.email }); //* Check if user already exists, by email
+    const user = await User.findOne({ email: req.body.email }); // Check if user already exists, by email
     console.log('user :>> ', user);
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
     if (!user) {
-      const hashedPassword = await passwordEncryption(req.body.password); //* if user does not exist, hash the password
+      const hashedPassword = await passwordEncryption(req.body.password); // if user does not exist, hash the password
       if (!hashedPassword) {
         return res
           .status(500)
@@ -134,6 +134,7 @@ export const uploadAvatar = async (req, res) => {
     res.status(500).json({ message: 'Failed to upload avatar' });
   }
 };
+
 export const getUserProfile = async (req, res) => {
   console.log('req.user controller:>> ', req.user);
   if (!req.user) {

@@ -51,9 +51,7 @@ const AuthLayout = ({
               <a
                 href='./signup'
                 className='font-semibold leading-6 text-gray-100 hover:text-gray-200'
-              >
-                Start a 14 day free trial
-              </a>
+              ></a>
             </p>
           )}
         </div>
