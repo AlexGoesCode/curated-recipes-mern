@@ -67,7 +67,7 @@ export const loginUser = async (req, res) => {
     }
     if (isPasswordCorrect) {
       const options = {
-        expiresIn: '1h',
+        expiresIn: '24h',
       };
       const payload = {
         sub: user.id,
