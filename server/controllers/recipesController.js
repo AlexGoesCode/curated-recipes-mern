@@ -79,11 +79,28 @@ const getRecipesByName = async (req, res) => {
 };
 
 const getRecipesByIngredients = async (req, res) => {
-  const ingredient = req.query.ingredients;
+  const ingredients = req.query.ingredients;
+  console.log(`Searching for recipes with ingredients: ${ingredients}`);
   try {
-    const recipesArray = await RecipeModel.find({
-      ingredients: { $elemMatch: { $in: ingredient } }, //* $elemMatch: MongoDB operator allows us to search for a string in an array.
-    });
+    let recipesArray;
+    if (!ingredients) {
+      // Fetch all recipes if ingredients are not provided or is an empty string
+      recipesArray = await RecipeModel.find({});
+    } else {
+      // Split the ingredients string into an array and trim whitespace
+      const ingredientsArray = ingredients
+        .split(',')
+        .map((ingredient) => ingredient.trim());
+      // Create an array of regex queries for each ingredient
+      const regexQueries = ingredientsArray.map((ingredient) => ({
+        ingredients: { $regex: new RegExp(ingredient, 'i') },
+      }));
+      // Perform the search with the provided ingredients
+      recipesArray = await RecipeModel.find({
+        $and: regexQueries, // Use $and operator to match all ingredients
+      });
+    }
+    console.log(`Found ${recipesArray.length} recipes`);
     res.status(200).json(recipesArray);
   } catch (error) {
     console.log('Error fetching recipes:', error);
@@ -91,11 +108,22 @@ const getRecipesByIngredients = async (req, res) => {
   }
 };
 
-//* Recipe by diet filter (needs additional interface to pick diet - toggle or so)
+//* Recipe by diet
 const getRecipesByDiet = async (req, res) => {
   const diet = req.query.diet;
+  console.log(`Searching for recipes with diet: ${diet}`);
   try {
-    const recipesArray = await RecipeModel.find({ diet });
+    let recipesArray;
+    if (!diet) {
+      // Fetch all recipes if diet is not provided or is an empty string
+      recipesArray = await RecipeModel.find({});
+    } else {
+      // Perform the search with the provided diet
+      recipesArray = await RecipeModel.find({
+        diet: { $regex: new RegExp(diet, 'i') },
+      });
+    }
+    console.log(`Found ${recipesArray.length} recipes`);
     res.status(200).json(recipesArray);
   } catch (error) {
     console.log('Error fetching recipes:', error);
