@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
-import { fetchUserLikes } from '../api/user';
 import { Recipe } from '../types/Types';
-import { useAuth } from '../context/AuthContext';
 
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
