@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SearchBarProps {
   handleSearch: () => void;
   setSearchTerm: (term: string) => void;
-  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void; // Add this prop with specific union type
+  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void;
 }
 
 function SearchBar({
@@ -14,7 +14,24 @@ function SearchBar({
   const [term, setTerm] = useState('');
   const [searchOption, setSearchOption] = useState<
     'name' | 'ingredients' | 'diet' | 'id'
-  >('name'); // Use a specific union type for searchOption
+  >('name');
+  const [placeholder, setPlaceholder] = useState('Search by name...');
+
+  useEffect(() => {
+    switch (searchOption) {
+      case 'name':
+        setPlaceholder('Search by name...');
+        break;
+      case 'ingredients':
+        setPlaceholder('Search by ingredients...');
+        break;
+      case 'diet':
+        setPlaceholder('Search by diet...');
+        break;
+      default:
+        setPlaceholder('Search...');
+    }
+  }, [searchOption]);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -30,8 +47,7 @@ function SearchBar({
     const selectedOption = event.target.value as
       | 'name'
       | 'ingredients'
-      | 'diet'
-      | 'id'; // Cast to specific union type
+      | 'diet';
     setSearchOption(selectedOption);
     setSearchBy(selectedOption);
   }
@@ -48,14 +64,13 @@ function SearchBar({
           <option value='name'>Name</option>
           <option value='ingredients'>Ingredients</option>
           <option value='diet'>Diet</option>
-          <option value='id'>ID</option>
         </select>
         <input
           type='search'
           id='search-dropdown'
           onChange={handleInputChange}
           className='relative block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 border-gray-300 rounded-r-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500'
-          placeholder='Search...'
+          placeholder={placeholder}
           required
         />
         <button
