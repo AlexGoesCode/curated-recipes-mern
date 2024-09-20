@@ -13,7 +13,7 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
   const { user } = useAuth();
 
   return (
-    <div className='relative bg-gray-900 bg-opacity-50 max-w-60 p-4 border rounded-2xl shadow-md cursor-pointer'>
+    <div className='relative bg-gray-900 bg-opacity-50 w-56 p-4 border rounded-2xl shadow-md cursor-pointer'>
       {item.picture && (
         <Link to={`/recipes/${item._id}`}>
           <img
@@ -25,9 +25,13 @@ const GridItem = ({ item, isLiked, fetchData }: GridItemProps) => {
       )}
       <h3 className='text-lg font-bold mt-2 text-gray-100'>{item.name}</h3>
       <p className='text-gray-100'>{item.origin}</p>
-
       <p className='text-gray-100'>{item.likes?.length} Likes</p>
-
+      <p className='text-gray-100'>
+        Diet:{' '}
+        {Array.isArray(item.diet) && item.diet.length > 0
+          ? item.diet.join(', ')
+          : 'none'}
+      </p>
       <div className='absolute bottom-2 right-2 '>
         <LikeButton
           recipeId={item._id}
