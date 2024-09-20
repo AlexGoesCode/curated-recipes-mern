@@ -253,6 +253,7 @@ const CreateRecipe = () => {
               // className='none'
               id='fileInput'
               name='fileInput'
+              className='text-gray-100'
               // style={{ display: 'none' }}
             />
             {/* Upload a picture
@@ -272,6 +273,18 @@ const CreateRecipe = () => {
         </div>
 
         {error && <div className='text-red-500 text-sm'>{error}</div>}
+        {isUploading && (
+          <div className='mt-4 flex justify-center'>
+            <div
+              className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-white border-e-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]'
+              role='status'
+            >
+              <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
+                Loading...
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </AuthLayout>
   );
