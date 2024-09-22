@@ -88,8 +88,11 @@ const getRecipesByIngredients = async (req, res) => {
   console.log(`Searching for recipes with ingredients: ${ingredients}`);
   try {
     let recipesArray;
+    let totalCount;
+
     if (!ingredients) {
       recipesArray = await RecipeModel.find({}).skip(skip).limit(limit); // Apply pagination
+      totalCount = await RecipeModel.countDocuments({});
     } else {
       const ingredientsArray = ingredients
         .split(',')
@@ -99,16 +102,21 @@ const getRecipesByIngredients = async (req, res) => {
         ingredients: { $regex: new RegExp(ingredient, 'i') },
       }));
 
+      console.log('Regex Queries:', regexQueries);
+
       recipesArray = await RecipeModel.find({
         $and: regexQueries,
       })
         .skip(skip)
         .limit(limit); // Apply pagination
+
+      totalCount = await RecipeModel.countDocuments({
+        $and: regexQueries,
+      });
     }
 
-    const totalCount = await RecipeModel.countDocuments({
-      $and: regexQueries,
-    });
+    console.log('Recipes Array:', recipesArray);
+    console.log('Total Count:', totalCount);
 
     res.status(200).json({
       recipes: recipesArray,
