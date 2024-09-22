@@ -85,7 +85,7 @@ const SignUp = () => {
       <div>
         <label
           htmlFor='name'
-          className='block text-sm font-medium leading-6 text-gray-100'
+          className='-mt-5 block text-sm font-medium leading-6 text-gray-100'
         >
           User Name
         </label>
@@ -98,7 +98,7 @@ const SignUp = () => {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md mb-4 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
         <label
@@ -116,7 +116,7 @@ const SignUp = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            className='block w-full rounded-md border-0 py-1.5 -mb-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
       </div>
@@ -127,7 +127,7 @@ const SignUp = () => {
             htmlFor='password'
             className='block text-sm font-medium leading-6 text-gray-100'
           >
-            Password
+            New password
           </label>
         </div>
         <div className='mt-2'>
@@ -142,25 +142,12 @@ const SignUp = () => {
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
-        <div className='mt-2'>
-          <input
-            id='file'
-            name='file'
-            type='file'
-            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
-            onChange={handleFileChange}
-          />
-          {avatarName && <p>{avatarName} uploaded</p>}
-        </div>
-      </div>
-
-      <div>
         <div className='flex items-center justify-between'>
           <label
             htmlFor='confirm-password'
-            className='block text-sm font-medium leading-6 text-gray-100'
+            className='block text-sm font-medium mt-3 leading-6 text-gray-100'
           >
-            Confirm Password
+            Confirm password
           </label>
         </div>
         <div className='mt-2'>
@@ -174,6 +161,16 @@ const SignUp = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
+        </div>
+        <div className='mt-2'>
+          <input
+            id='file'
+            name='file'
+            type='file'
+            className='block w-full rounded-md border-0 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            onChange={handleFileChange}
+          />
+          {avatarName && <p>{avatarName} uploaded</p>}
         </div>
       </div>
 

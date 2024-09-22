@@ -101,7 +101,7 @@ const CreateRecipe = () => {
       showSignupLink={false}
       buttonClassName='text-xl'
     >
-      <div className='space-y-2 -mt-5'>
+      <div className='h-96 overflow-y-auto space-y-2 -mt-2'>
         <div>
           <label
             htmlFor='name'
