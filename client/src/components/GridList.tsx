@@ -1,24 +1,14 @@
 // import { useState } from 'react';
 import GridItem from './GridItem';
-import Pagination from './Pagination';
 import { Recipe } from '../types/Types';
 import { useAuth } from '../context/AuthContext';
 
 interface GridListProps {
   items: Recipe[];
-  totalPages: number;
-  currentPage: number;
-  handlePageChange: (page: number) => void;
   fetchData: () => Promise<void>;
 }
 
-function GridList({
-  items,
-  totalPages,
-  currentPage,
-  handlePageChange,
-  fetchData,
-}: GridListProps) {
+function GridList({ items, fetchData }: GridListProps) {
   const { user } = useAuth();
 
   console.log('Rendering GridList with items:', items); // Debug log
@@ -38,14 +28,6 @@ function GridList({
           ))}
         </div>
       </div>
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
     </div>
   );
 }
