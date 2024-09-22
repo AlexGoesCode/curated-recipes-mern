@@ -23,10 +23,10 @@ function SearchBar({
         setPlaceholder('Search by name...');
         break;
       case 'ingredients':
-        setPlaceholder('Search by ingredients...');
+        setPlaceholder('type one or multiple ingredients divided with comma');
         break;
       case 'diet':
-        setPlaceholder('Search by diet...');
+        setPlaceholder('none is by default | vegetarian | vegan');
         break;
       default:
         setPlaceholder('Search...');
