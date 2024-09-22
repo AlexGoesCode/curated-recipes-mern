@@ -50,28 +50,29 @@ const createRecipe = async (req, res) => {
 
 //* Function that tries to fetch recipes by name from the model. -> 200, 404 or 500
 const getRecipesByName = async (req, res) => {
-  /* Some code to build the pagination :1
-  the variables below woudl need to be recieved from the front end in the request. And change accordinglly to the next/prev page button clicked by the user.
-  const finalRecipe = 5;
-  const initialRecipe = 0; */
+  const name = req.query.name;
+  const page = parseInt(req.query.page) || 1; // Get the current page, default is 1
+  const limit = parseInt(req.query.number) || 10; // Get the items per page, default is 10
+  const skip = (page - 1) * limit; // Calculate how many items to skip
 
   //* Fetch the name from the query
   try {
-    const name = req.query.name;
     const recipes = await RecipeModel.find({
-      name: { $regex: name, $options: 'i' }, //* $regex: MongoDB operator that allows us to search for a string in a field.
+      name: { $regex: name, $options: 'i' },
+    })
+      .skip(skip)
+      .limit(limit); // Pagination logic here
+
+    const totalCount = await RecipeModel.countDocuments({
+      name: { $regex: name, $options: 'i' },
+    }); // Total number of matching recipes
+
+    res.status(200).json({
+      recipes, // The paginated recipes
+      totalCount, // Total number of matching recipes
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
     });
-    /* Some code to build the pagination :2
-    the variable recipiesResponse below, would use .slice() and the numbers finalRecipe and intialRecipe, to create a new array with the number of recipies we want to display in the page.
-    const recipiesResponse = recipes.slice(initialRecipe, numberOfRecipes);*/
-    if (recipes.length) {
-      res.status(200).json(recipes);
-      /* Some code to build the pagination :3
-      the response below would send the array of LIMITED recipies to the front end.*/
-      // res.status(200).json(recipiesResponse);
-    } else {
-      res.status(404).json({ message: 'No recipes found with that name' });
-    }
   } catch (error) {
     console.error('Error fetching recipes by name:', error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -80,30 +81,43 @@ const getRecipesByName = async (req, res) => {
 
 const getRecipesByIngredients = async (req, res) => {
   const ingredients = req.query.ingredients;
+  const page = parseInt(req.query.page) || 1; // Get the current page, default is 1
+  const limit = parseInt(req.query.number) || 10; // Get the items per page, default is 10
+  const skip = (page - 1) * limit; // Calculate how many items to skip
+
   console.log(`Searching for recipes with ingredients: ${ingredients}`);
   try {
     let recipesArray;
     if (!ingredients) {
-      // Fetch all recipes if ingredients are not provided or is an empty string
-      recipesArray = await RecipeModel.find({});
+      recipesArray = await RecipeModel.find({}).skip(skip).limit(limit); // Apply pagination
     } else {
-      // Split the ingredients string into an array and trim whitespace
       const ingredientsArray = ingredients
         .split(',')
         .map((ingredient) => ingredient.trim());
-      // Create an array of regex queries for each ingredient
+
       const regexQueries = ingredientsArray.map((ingredient) => ({
         ingredients: { $regex: new RegExp(ingredient, 'i') },
       }));
-      // Perform the search with the provided ingredients
+
       recipesArray = await RecipeModel.find({
-        $and: regexQueries, // Use $and operator to match all ingredients
-      });
+        $and: regexQueries,
+      })
+        .skip(skip)
+        .limit(limit); // Apply pagination
     }
-    console.log(`Found ${recipesArray.length} recipes`);
-    res.status(200).json(recipesArray);
+
+    const totalCount = await RecipeModel.countDocuments({
+      $and: regexQueries,
+    });
+
+    res.status(200).json({
+      recipes: recipesArray,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
-    console.log('Error fetching recipes:', error);
+    console.error('Error fetching recipes by ingredients:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -111,22 +125,37 @@ const getRecipesByIngredients = async (req, res) => {
 //* Recipe by diet
 const getRecipesByDiet = async (req, res) => {
   const diet = req.query.diet;
+  const page = parseInt(req.query.page) || 1; // Get the current page, default is 1
+  const limit = parseInt(req.query.number) || 10; // Get the items per page, default is 10
+  const skip = (page - 1) * limit; // Calculate how many items to skip
+
   console.log(`Searching for recipes with diet: ${diet}`);
   try {
     let recipesArray;
     if (!diet) {
       // Fetch all recipes if diet is not provided or is an empty string
-      recipesArray = await RecipeModel.find({});
+      recipesArray = await RecipeModel.find({}).skip(skip).limit(limit); // Apply pagination
     } else {
       // Perform the search with the provided diet
       recipesArray = await RecipeModel.find({
         diet: { $regex: new RegExp(diet, 'i') },
-      });
+      })
+        .skip(skip)
+        .limit(limit); // Apply pagination
     }
-    console.log(`Found ${recipesArray.length} recipes`);
-    res.status(200).json(recipesArray);
+
+    const totalCount = await RecipeModel.countDocuments({
+      diet: { $regex: new RegExp(diet, 'i') },
+    });
+
+    res.status(200).json({
+      recipes: recipesArray,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
-    console.log('Error fetching recipes:', error);
+    console.log('Error fetching recipes by diet:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
