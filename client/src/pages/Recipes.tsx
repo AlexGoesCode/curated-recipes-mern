@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
+import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
 
 const Recipes = () => {
@@ -24,16 +25,19 @@ const Recipes = () => {
 
       if (Array.isArray(data)) {
         setItems(data);
+        setTotalPages(Math.ceil(data.length / 10) || 1);
       } else if (data && Array.isArray(data.recipes)) {
         setItems(data.recipes);
+        setTotalPages(Math.ceil(data.totalCount / 10) || 1);
       } else {
         console.warn('Unexpected data format:', data);
         setItems([]);
+        setTotalPages(1);
       }
-
-      setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setItems([]);
+      setTotalPages(1);
     }
   };
 
@@ -59,13 +63,14 @@ const Recipes = () => {
         setSearchTerm={setSearchTerm}
         setSearchBy={setSearchBy}
       />
-      <GridList
-        items={items}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        handlePageChange={handlePageChange}
-        fetchData={fetchData}
-      />
+      <GridList items={items} fetchData={fetchData} />
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
