@@ -1,13 +1,13 @@
 export type Recipe = {
   _id: string;
-  name: string; // always available, no need to make it optional
+  name: string;
   origin: string;
   ingredients: string[];
   instructions: string;
   difficulty: 'easy' | 'medium' | 'hard';
   likes: string[];
   picture: string;
-  diet: 'none' | 'vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free'; // Match the schema exactly
+  diet: ('none' | 'vegetarian' | 'vegan' | 'gluten-free' | 'dairy-free')[];
 };
 
 export type UserType = {
