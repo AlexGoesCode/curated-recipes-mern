@@ -1,4 +1,4 @@
-//* Footer from Flowbite
+// Flowbite
 'use client';
 
 import { Footer } from 'flowbite-react';
@@ -12,7 +12,7 @@ const FlowFooter = () => {
       <Footer.Copyright
         href='#'
         className='text-gray-300 font-medium text-sm'
-        by='Flavour:Dance!'
+        by='Curated Recipes'
         year={2024}
       />
 
