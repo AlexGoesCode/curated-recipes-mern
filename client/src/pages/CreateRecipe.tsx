@@ -1,16 +1,54 @@
-import { useState } from 'react';
-import { useNavigate, NavigateFunction } from 'react-router-dom';
+import { useState, useReducer } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthLayout from '../components/AuthLayout';
 import { Recipe } from '../types/Types';
+import Select from 'react-select';
+import { MultiValue } from 'react-select';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+const dietOptions = [
+  { value: 'none', label: 'None' },
+  { value: 'vegetarian', label: 'Vegetarian' },
+  { value: 'vegan', label: 'Vegan' },
+  { value: 'gluten-free', label: 'Gluten-Free' },
+  { value: 'dairy-free', label: 'Dairy-Free' },
+];
+
+// Define action types for the reducer
+type RecipeAction =
+  | { type: 'SET_FIELD'; field: string; value: any }
+  | { type: 'SET_INGREDIENT'; index: number; value: string }
+  | { type: 'ADD_INGREDIENT' }
+  | { type: 'REMOVE_INGREDIENT'; index: number };
+
+// Reducer function for recipe state management
+const recipeReducer = (state: Recipe, action: RecipeAction): Recipe => {
+  switch (action.type) {
+    case 'SET_FIELD':
+      return { ...state, [action.field]: action.value };
+    case 'SET_INGREDIENT':
+      const newIngredients = [...state.ingredients];
+      newIngredients[action.index] = action.value;
+      return { ...state, ingredients: newIngredients };
+    case 'ADD_INGREDIENT':
+      return { ...state, ingredients: [...state.ingredients, ''] };
+    case 'REMOVE_INGREDIENT':
+      return {
+        ...state,
+        ingredients: state.ingredients.filter((_, i) => i !== action.index),
+      };
+    default:
+      return state;
+  }
+};
 
 const CreateRecipe = () => {
-  const [recipe, setRecipe] = useState<Recipe>({
-    //* match the schema exactly
+  const [recipe, dispatch] = useReducer(recipeReducer, {
     _id: '',
     name: '',
     origin: '',
-    diet: 'none',
+    diet: [],
     difficulty: 'easy',
     picture: '',
     ingredients: [''],
@@ -19,53 +57,71 @@ const CreateRecipe = () => {
   });
 
   const { setError, error } = useAuth();
-  const navigate: NavigateFunction = useNavigate();
+  const navigate = useNavigate();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleIngredientChange = (index: number, value: string) => {
-    const newIngredients = [...recipe.ingredients];
-    newIngredients[index] = value;
-    setRecipe({ ...recipe, ingredients: newIngredients });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Recipe>();
 
-  const addIngredient = () => {
-    setRecipe({ ...recipe, ingredients: [...recipe.ingredients, ''] });
-  };
-
-  const removeIngredient = (index: number) => {
-    const newIngredients = recipe.ingredients.filter((_, i) => i !== index); //* filter out the ingredient at the index
-    setRecipe({ ...recipe, ingredients: newIngredients });
+  const handleDietChange = (
+    selectedOptions: MultiValue<{ value: string; label: string }>
+  ) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    dispatch({ type: 'SET_FIELD', field: 'diet', value: selectedValues });
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      //* if there is a file selected, set the imageFile state
       setImageFile(event.target.files[0]);
     }
   };
 
-  const handleSubmit = async () => {
-    console.log(
-      'typeof recipe.ingredients :>> ',
-      recipe.ingredients instanceof Array
+  const isFormReadyToSubmit = () => {
+    // Check if all required fields are filled
+    const hasName = recipe.name.trim() !== '';
+    const hasOrigin = recipe.origin.trim() !== '';
+    const hasInstructions = recipe.instructions.trim() !== '';
+
+    // Check if at least 3 ingredients have text
+    const filledIngredients = recipe.ingredients.filter(
+      (ingredient) => ingredient.trim() !== ''
     );
-    console.log(' recipe.ingredients :>> ', recipe.ingredients);
+    const hasEnoughIngredients = filledIngredients.length >= 3;
 
-    if (!imageFile) return alert('You need to select an image');
+    // Check if at least one diet option is selected
+    const hasDietOption = recipe.diet.length > 0;
 
-    //* form data to send to the server
-    setIsUploading(true); //*
-    console.log('recipe :>> ', recipe);
-    console.log('picture :>> ', imageFile);
+    // Check if an image is selected
+    const hasImage = imageFile !== null;
+
+    // Return true only if all conditions are met
+    return (
+      hasName &&
+      hasOrigin &&
+      hasInstructions &&
+      hasEnoughIngredients &&
+      hasDietOption &&
+      hasImage
+    );
+  };
+
+  const onSubmit: SubmitHandler<Recipe> = async () => {
+    if (!imageFile) return alert('Please select an image.');
+
     const formData = new FormData();
     formData.append('name', recipe.name);
     formData.append('origin', recipe.origin);
     formData.append('ingredients', recipe.ingredients.join(','));
     formData.append('instructions', recipe.instructions);
-    formData.append('diet', recipe.diet);
+    formData.append('diet', recipe.diet.join(','));
     formData.append('difficulty', recipe.difficulty);
     formData.append('picture', imageFile);
+
+    setIsUploading(true);
 
     try {
       const response = await fetch(
@@ -76,32 +132,28 @@ const CreateRecipe = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error('Failed to upload image');
-      }
+      if (!response.ok) throw new Error('Failed to upload recipe');
 
-      //* checks if the response is ok
-      const result = await response.json();
-      // setRecipe({ ...recipe, picture: result.imageUrl });
-      setIsUploading(false); //* NEW
+      setIsUploading(false);
       alert('Recipe created successfully');
+      navigate('/recipes');
     } catch (err) {
-      const error = err as Error;
-      console.error('Error occurred during image upload', error);
-      setError(error.message);
-      setIsUploading(false); //* NEW
+      setError((err as Error).message);
+      setIsUploading(false);
     }
   };
 
   return (
     <AuthLayout
-      title='Create a New Recipe'
-      buttonText='Create Recipe'
-      onButtonClick={handleSubmit}
-      showSignupLink={false}
-      buttonClassName='text-xl'
+      title='Create Recipe'
+      buttonText='Submit'
+      onButtonClick={handleSubmit(onSubmit)}
     >
-      <div className='h-96 overflow-y-auto space-y-2 -mt-2'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='space-y-4 h-96 overflow-y-auto -mt-2'
+      >
+        {/* Recipe Name */}
         <div>
           <label
             htmlFor='name'
@@ -112,16 +164,25 @@ const CreateRecipe = () => {
           <div className='mt-2'>
             <input
               id='name'
-              name='name'
-              type='text'
-              required
+              {...register('name', { required: true })}
               value={recipe.name}
-              onChange={(e) => setRecipe({ ...recipe, name: e.target.value })}
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+              placeholder='enter recipe name'
+              onChange={(e) =>
+                dispatch({
+                  type: 'SET_FIELD',
+                  field: 'name',
+                  value: e.target.value,
+                })
+              }
+              className='block w-4/5 rounded-md border-0 py-1 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
+            {errors.name && (
+              <span className='text-red-500 text-sm'>Name is required</span>
+            )}
           </div>
         </div>
 
+        {/* Country of Origin */}
         <div>
           <label
             htmlFor='origin'
@@ -132,16 +193,25 @@ const CreateRecipe = () => {
           <div className='mt-2'>
             <input
               id='origin'
-              name='origin'
-              type='text'
-              required
+              {...register('origin', { required: true })}
               value={recipe.origin}
-              onChange={(e) => setRecipe({ ...recipe, origin: e.target.value })}
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+              placeholder='enter the country of origin'
+              onChange={(e) =>
+                dispatch({
+                  type: 'SET_FIELD',
+                  field: 'origin',
+                  value: e.target.value,
+                })
+              }
+              className='block w-4/5 rounded-md border-0 py-1 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
+            {errors.origin && (
+              <span className='text-red-500 text-sm'>Origin is required</span>
+            )}
           </div>
         </div>
 
+        {/* Diet Type */}
         <div>
           <label
             htmlFor='diet'
@@ -150,25 +220,48 @@ const CreateRecipe = () => {
             Diet Type
           </label>
           <div className='mt-2'>
-            <select
+            <Select
               id='diet'
-              name='diet'
-              required
-              value={recipe.diet}
+              isMulti
+              options={dietOptions}
+              value={dietOptions.filter((option) =>
+                recipe.diet.includes(option.value as Recipe['diet'][number])
+              )}
+              onChange={handleDietChange}
+              className='block w-4/5 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+            />
+          </div>
+        </div>
+
+        {/* Difficulty */}
+        <div>
+          <label
+            htmlFor='difficulty'
+            className='block text-md font-medium leading-6 text-gray-100'
+          >
+            Difficulty Level
+          </label>
+          <div className='mt-2'>
+            <select
+              id='difficulty'
+              value={recipe.difficulty}
               onChange={(e) =>
-                setRecipe({ ...recipe, diet: e.target.value as Recipe['diet'] })
+                dispatch({
+                  type: 'SET_FIELD',
+                  field: 'difficulty',
+                  value: e.target.value,
+                })
               }
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+              className='block w-4/5 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             >
-              <option value='none'>None</option>
-              <option value='vegetarian'>Vegetarian</option>
-              <option value='vegan'>Vegan</option>
-              <option value='gluten-free'>Gluten-Free</option>
-              <option value='dairy-free'>Dairy-Free</option>
+              <option value='easy'>Easy</option>
+              <option value='medium'>Medium</option>
+              <option value='hard'>Hard</option>
             </select>
           </div>
         </div>
 
+        {/* Ingredients */}
         <div>
           <label
             htmlFor='ingredients'
@@ -182,15 +275,20 @@ const CreateRecipe = () => {
                 <input
                   type='text'
                   value={ingredient}
+                  placeholder='add at least 3 ingredients'
                   onChange={(e) =>
-                    handleIngredientChange(index, e.target.value)
+                    dispatch({
+                      type: 'SET_INGREDIENT',
+                      index,
+                      value: e.target.value,
+                    })
                   }
-                  className='flex-1 block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+                  className='flex-1 block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
                 />
                 <button
                   type='button'
-                  onClick={() => removeIngredient(index)}
-                  className='rounded-md bg-red-600 px-2 py-1 text-gray-100'
+                  onClick={() => dispatch({ type: 'REMOVE_INGREDIENT', index })}
+                  className='rounded-md bg-red-600 px-1 py-1 text-gray-100'
                 >
                   Remove
                 </button>
@@ -198,7 +296,7 @@ const CreateRecipe = () => {
             ))}
             <button
               type='button'
-              onClick={addIngredient}
+              onClick={() => dispatch({ type: 'ADD_INGREDIENT' })}
               className='rounded-md text-sm bg-green-600 px-2 py-1 text-white'
             >
               Add additional Row
@@ -206,6 +304,7 @@ const CreateRecipe = () => {
           </div>
         </div>
 
+        {/* Instructions */}
         <div>
           <label
             htmlFor='instructions'
@@ -216,76 +315,60 @@ const CreateRecipe = () => {
           <div className='mt-2'>
             <textarea
               id='instructions'
-              name='instructions'
-              rows={4}
-              required
+              {...register('instructions', { required: true })}
               value={recipe.instructions}
+              placeholder='write some instructions'
               onChange={(e) =>
-                setRecipe({ ...recipe, instructions: e.target.value })
+                dispatch({
+                  type: 'SET_FIELD',
+                  field: 'instructions',
+                  value: e.target.value,
+                })
               }
-              className='block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
+              rows={4}
+              className='block w-4/5 rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
             />
+            {errors.instructions && (
+              <span className='text-red-500 text-sm'>
+                Instructions are required
+              </span>
+            )}
           </div>
         </div>
 
+        {/* Image Upload */}
         <div>
           <label
             htmlFor='picture'
             className='block text-md font-medium leading-6 text-gray-100'
           >
-            Image URL
+            Upload Image
           </label>
-          <div className='mt-2 flex items-center space-x-2'>
-            {/* <label
-              // htmlFor='fileInput'
-              className='rounded-md bg-blue-600 px-2 py-1 text-red'
-              style={{
-                border: '1px solid #ccc',
-                display: 'inline-block',
-                padding: '6px 12px',
-                cursor: 'pointer',
-              }}
-            > */}
-            <input
-              type='file'
-              accept='image/*'
-              onChange={handleImageChange}
-              // className='none'
-              id='fileInput'
-              name='fileInput'
-              className='text-gray-100'
-              // style={{ display: 'none' }}
-            />
-            {/* Upload a picture
-            </label> */}
+          <div className='mt-2 text-gray-400'>
+            <input type='file' accept='image/*' onChange={handleImageChange} />
           </div>
-          {/* {console.log('isUploading', isUploading)} */}
-          {isUploading && (
-            <div
-              className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]'
-              role='status'
-            >
-              <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
-                Loading...
-              </span>
+        </div>
+
+        {/* Status Box */}
+        <div>
+          {isUploading ? (
+            <div className='text-orange-500 text-sm font-medium'>
+              Uploading... Please wait
+            </div>
+          ) : isFormReadyToSubmit() ? (
+            <div className='text-green-500 text-sm font-medium'>
+              Ready to submit
+            </div>
+          ) : (
+            <div className='text-red-500 text-sm font-medium'>
+              Please complete the form before submitting
             </div>
           )}
         </div>
 
-        {error && <div className='text-red-500 text-sm'>{error}</div>}
-        {isUploading && (
-          <div className='mt-4 flex justify-center'>
-            <div
-              className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-white border-e-transparent align-[-0.125em] text-info motion-reduce:animate-[spin_1.5s_linear_infinite]'
-              role='status'
-            >
-              <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
-                Loading...
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
+        {/* Error Display */}
+        {error && <p className='text-red-500 text-sm'>{error}</p>}
+      </form>
     </AuthLayout>
   );
 };
