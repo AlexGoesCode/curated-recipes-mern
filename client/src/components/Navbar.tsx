@@ -17,7 +17,7 @@ const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Recipes', href: '/recipes', current: false },
   { name: 'Create Recipe', href: '/create-recipe', current: false },
-  { name: 'Saved Recipes', href: '/saved-recipes', current: false },
+  { name: 'Liked Recipes', href: '/saved-recipes', current: false },
 ];
 
 function classNames(...classes: string[]) {

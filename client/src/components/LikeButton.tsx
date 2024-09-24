@@ -1,5 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+// import { useContext, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 interface LikeButtonProps {
   recipeId: string;
@@ -68,7 +71,7 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
       }`}
       onClick={handleLike}
     >
-      {isLiked ? 'Liked' : 'Like'}
+      <FontAwesomeIcon icon={isLiked ? solidHeart : regularHeart} />
     </button>
   );
 };
