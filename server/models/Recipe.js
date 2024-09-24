@@ -7,9 +7,9 @@ const recipeSchema = new Schema(
     origin: { type: String, required: true },
     ingredients: { type: [String], required: true },
     instructions: { type: String, required: true },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], //* Array of user ids that liked the recipe
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     picture: { type: String },
-    diet: { type: String },
+    diet: [{ type: String }], // Changed to an array of strings
     difficulty: { type: String },
     // totalrating: { type: string, default: 0 },
   },
