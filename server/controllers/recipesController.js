@@ -21,12 +21,10 @@ const allRecipes = async (req, res) => {
 const createRecipe = async (req, res) => {
   console.log('req.body :>> ', req.body);
 
-  //* splits the ingredients string into an array
   const arrayOfIngredients = req.body.ingredients.split(',');
-  console.log('arrayOfIngredients :>> ', arrayOfIngredients);
-  console.log('req.file :>> ', req.file);
+  const arrayOfDiets = req.body.diet.split(','); // Split the diet field into an array
+  console.log('arrayOfDiets :>> ', arrayOfDiets);
 
-  //* If there is a file in the request, upload it to Cloudinary
   if (req.file) {
     const uploadedFile = await imageUpload(req.file, 'recipe-images');
     try {
@@ -37,7 +35,7 @@ const createRecipe = async (req, res) => {
         instructions: req.body.instructions,
         picture: uploadedFile,
         difficulty: req.body.difficulty,
-        diet: req.body.diet,
+        diet: arrayOfDiets, // Store as an array
       });
 
       const savedRecipe = await newRecipe.save();
@@ -133,28 +131,41 @@ const getRecipesByIngredients = async (req, res) => {
 //* Recipe by diet
 const getRecipesByDiet = async (req, res) => {
   const diet = req.query.diet;
-  const page = parseInt(req.query.page) || 1; // Get the current page, default is 1
-  const limit = parseInt(req.query.number) || 10; // Get the items per page, default is 10
-  const skip = (page - 1) * limit; // Calculate how many items to skip
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.number) || 10;
+  const skip = (page - 1) * limit;
 
   console.log(`Searching for recipes with diet: ${diet}`);
   try {
     let recipesArray;
+    let totalCount;
+
     if (!diet) {
-      // Fetch all recipes if diet is not provided or is an empty string
-      recipesArray = await RecipeModel.find({}).skip(skip).limit(limit); // Apply pagination
+      recipesArray = await RecipeModel.find({}).skip(skip).limit(limit);
+      totalCount = await RecipeModel.countDocuments({});
     } else {
-      // Perform the search with the provided diet
+      const dietsArray = diet.split(',').map((d) => d.trim());
+      console.log('Diets Array:', dietsArray);
+
+      const regexQueries = dietsArray.map((d) => ({
+        diet: { $regex: new RegExp(d, 'i') },
+      }));
+
+      console.log('Regex Queries:', regexQueries);
+
       recipesArray = await RecipeModel.find({
-        diet: { $regex: new RegExp(diet, 'i') },
+        $and: regexQueries,
       })
         .skip(skip)
-        .limit(limit); // Apply pagination
+        .limit(limit);
+
+      totalCount = await RecipeModel.countDocuments({
+        $and: regexQueries,
+      });
     }
 
-    const totalCount = await RecipeModel.countDocuments({
-      diet: { $regex: new RegExp(diet, 'i') },
-    });
+    console.log('Recipes Array:', recipesArray);
+    console.log('Total Count:', totalCount);
 
     res.status(200).json({
       recipes: recipesArray,
@@ -163,7 +174,7 @@ const getRecipesByDiet = async (req, res) => {
       totalPages: Math.ceil(totalCount / limit),
     });
   } catch (error) {
-    console.log('Error fetching recipes by diet:', error);
+    console.error('Error fetching recipes by diet:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
