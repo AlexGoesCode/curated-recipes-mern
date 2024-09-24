@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 interface SearchBarProps {
   handleSearch: () => void;
   setSearchTerm: (term: string) => void;
-  setSearchBy: (option: 'name' | 'ingredients' | 'diet' | 'id') => void;
+  setSearchBy: (option: 'name' | 'ingredients' | 'diet') => void;
 }
 
 function SearchBar({
@@ -13,7 +13,7 @@ function SearchBar({
 }: SearchBarProps) {
   const [term, setTerm] = useState('');
   const [searchOption, setSearchOption] = useState<
-    'name' | 'ingredients' | 'diet' | 'id'
+    'name' | 'ingredients' | 'diet'
   >('name');
   const [placeholder, setPlaceholder] = useState('Search by name...');
 
@@ -50,6 +50,12 @@ function SearchBar({
       | 'diet';
     setSearchOption(selectedOption);
     setSearchBy(selectedOption);
+
+    // Automatically fetch items when "diet" is selected
+    if (selectedOption === 'diet') {
+      setSearchTerm(''); // Clear the search term for diet
+      handleSearch();
+    }
   }
 
   return (
@@ -71,6 +77,7 @@ function SearchBar({
           onChange={handleInputChange}
           className='relative block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 border-gray-300 rounded-r-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500'
           placeholder={placeholder}
+          value={term}
           required
         />
         <button
