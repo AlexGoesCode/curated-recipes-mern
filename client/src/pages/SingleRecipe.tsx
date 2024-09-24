@@ -71,45 +71,45 @@ function SingleRecipe() {
   }
 
   return (
-    <main className='mt-8 flex justify-center items-center bg-eggshell'>
-      <article className='bg-white rounded-3xl max-w-5xl h-auto flex flex-col md:flex-row'>
-        <div className='md:w-1/2 flex justify-center items-center p-4'>
+    <main className='h-screen -my-20 flex justify-center items-center bg-eggshell text-gray-100'>
+      <article className='p-3 bg-gray-900 bg-opacity-70 border rounded-3xl max-h-full max-w-5xl h-full w-full md:h-auto md:w-auto flex flex-col md:flex-row overflow-y-auto'>
+        <div className='md:w-1/2 flex justify-center items-center p-2'>
           <div className='w-full'>
             <img
               src={recipe.picture}
               alt={`Photo of ${recipe.name}`}
-              className='w-full h-2/3 object-cover rounded-2xl'
+              className='max-h-screen w-96 object-cover rounded-2xl'
               style={{ aspectRatio: '3 / 4' }}
             />
           </div>
         </div>
-        <div className='relative px-8 py-4 font-outfit text-wenge-brown md:w-1/2'>
+        <div className='relative px-4 py-2 font-outfit text-wenge-brown md:w-1/2'>
           <button
-            className='absolute top-4 right-6 w-20 bg-orange-400 p-2 rounded-full'
+            className='absolute top-2 right-4 w-16 bg-orange-400 p-1 rounded-full'
             onClick={handleBack}
           >
             Back
           </button>
-          <h1 className='font-fancy text-4xl text-center mt-20 mb-4 text-dark-charcoal'>
+          <h1 className='font-fancy text-3xl text-center mt-10 mb-2 text-dark-charcoal'>
             {recipe.name}
           </h1>
-          <div className='flex justify-between mb-16 text-xl '>
-            <p className='mt-6'>Origin: {recipe.origin}</p>
-            <p className='mt-6 m-5'>Diet: {recipe.diet}</p>
+          <div className='flex justify-between mb-8 text-lg'>
+            <p className='mt-4'>Origin: {recipe.origin}</p>
+            <p className='mt-4 ml-4'>Diet: {recipe.diet}</p>
           </div>
-          <div className='flex justify-between mb-16'>
+          <div className='flex justify-between mb-8'>
             <div className='w-1/2 pr-2'>
-              <h2 className='text-dark-raspberry text-xl ml-2'>Difficulty</h2>
-              <p className='ml-8 text-lg'>{recipe.difficulty}</p>
+              <h2 className='text-dark-raspberry text-lg ml-2'>Difficulty</h2>
+              <p className='ml-4 text-md'>{recipe.difficulty}</p>
             </div>
             <div className='w-1/2 pl-2'>
-              <h2 className='text-dark-raspberry text-xl ml-2'>Likes</h2>
-              <div className='ml-8 flex items-center text-lg'>
+              <h2 className='text-dark-raspberry text-lg ml-2'>Likes</h2>
+              <div className='ml-4 flex items-center text-md'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   viewBox='0 0 24 24'
                   fill='red'
-                  className='w-6 h-6 mr-2'
+                  className='w-5 h-5 mr-1'
                   onClick={handleLikeRecipe} // Add onClick handler for liking the recipe
                 >
                   <path
@@ -122,20 +122,22 @@ function SingleRecipe() {
               </div>
             </div>
           </div>
-          <div className='flex mt-8'>
-            <div className='w-1/2 pr-4'>
-              <h3 className='font-fancy text-2xl text-nutmeg'>Ingredients</h3>
-              <ul className='list-disc marker:text-nutmeg mt-4 ml-6 text-wenge-brown marker:align-middle'>
+          <div className='flex mt-4'>
+            <div className='w-1/2 pr-2'>
+              <h3 className='font-fancy text-xl text-nutmeg'>Ingredients</h3>
+              <ul className='list-disc marker:text-nutmeg mt-2 ml-4 text-wenge-brown marker:align-middle max-h-40 overflow-y-auto'>
                 {recipe.ingredients.map((ingredient, index) => (
-                  <li className='pl-4 mt-2' key={index}>
+                  <li className='pl-2 mt-1' key={index}>
                     {ingredient}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className='w-1/2 pl-4'>
-              <h3 className='font-fancy text-2xl text-nutmeg'>Instructions</h3>
-              <p className='mt-4 ml-6'>{recipe.instructions}</p>
+            <div className='w-1/2 pl-2'>
+              <h3 className='font-fancy text-xl text-nutmeg'>Instructions</h3>
+              <p className='mt-2 ml-4 max-h-40 overflow-y-auto'>
+                {recipe.instructions}
+              </p>
             </div>
           </div>
         </div>
