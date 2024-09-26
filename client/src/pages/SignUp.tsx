@@ -89,7 +89,7 @@ const SignUp = () => {
         >
           User Name
         </label>
-        <div className='mt-2'>
+        <div className='mt-1'>
           <input
             id='username'
             name='username'
@@ -107,7 +107,7 @@ const SignUp = () => {
         >
           Email address
         </label>
-        <div className='mt-2'>
+        <div className='mt-1'>
           <input
             id='email'
             name='email'
@@ -130,7 +130,7 @@ const SignUp = () => {
             New password
           </label>
         </div>
-        <div className='mt-2'>
+        <div className='mt-1'>
           <input
             id='password'
             name='password'
@@ -150,7 +150,7 @@ const SignUp = () => {
             Confirm password
           </label>
         </div>
-        <div className='mt-2'>
+        <div className='mt-1'>
           <input
             id='confirm-password'
             name='confirm-password'
@@ -162,7 +162,15 @@ const SignUp = () => {
             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-900 focus:ring-2 focus:ring-inset focus:ring-orange-400 sm:text-sm sm:leading-6'
           />
         </div>
-        <div className='mt-2'>
+        <div className='flex items-center justify-between'>
+          <label
+            htmlFor='confirm-password'
+            className='block text-sm font-medium mt-3 leading-6 text-gray-100'
+          >
+            User profile image
+          </label>
+        </div>
+        <div className='mt-1'>
           <input
             id='file'
             name='file'
