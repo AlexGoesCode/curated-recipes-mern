@@ -299,7 +299,7 @@ const CreateRecipe = () => {
               onClick={() => dispatch({ type: 'ADD_INGREDIENT' })}
               className='rounded-md text-sm bg-green-600 px-2 py-1 text-white'
             >
-              Add additional Row
+              Add ingredient
             </button>
           </div>
         </div>
