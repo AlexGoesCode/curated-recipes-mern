@@ -20,7 +20,7 @@ const Recipes = () => {
     console.log('Search By:', searchBy); // Log the search type
 
     try {
-      let url = `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=5`;
+      let url = `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=10`;
 
       console.log('Fetching URL:', url); // Log the final API URL
 
@@ -30,10 +30,10 @@ const Recipes = () => {
 
       if (Array.isArray(data)) {
         setItems(data);
-        setTotalPages(Math.ceil(data.length / 5) || 1); // Assuming 5 items per page
+        setTotalPages(Math.ceil(data.length / 10) || 1); // Assuming 5 items per page
       } else if (data && Array.isArray(data.recipes)) {
         setItems(data.recipes);
-        setTotalPages(Math.ceil(data.totalCount / 5) || 1); // Use totalCount from API response
+        setTotalPages(Math.ceil(data.totalCount / 10) || 1); // Use totalCount from API response
       } else {
         console.warn('Unexpected data format:', data);
         setItems([]);
