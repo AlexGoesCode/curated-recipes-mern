@@ -6,9 +6,8 @@ import TestReact from '../components/foo/TestReact';
 import Login from '../pages/Login';
 import Logout from '../pages/Logout';
 import SignUp from '../pages/SignUp';
-// import NotFound from '../../pages/not-found/NotFound';
 import CreateRecipe from '../pages/CreateRecipe';
-import SavedRecipes from '../pages/SavedRecipes';
+import SavedRecipes from '../pages/LikedRecipes';
 import ProtectedRoute from '../components/ProtectedRoute';
 import NotFound from '../pages/NotFound';
 

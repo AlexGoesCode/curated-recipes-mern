@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function TestReact() {
   console.log('%c component run', 'color:green');
@@ -37,7 +37,10 @@ function TestReact() {
         position: 'absolute',
       }}
     >
-      {console.log('%c HTML PART run', 'color:orange')}
+      {(() => {
+        console.log('%c HTML PART run', 'color:orange');
+        return null;
+      })()}
       <h1>Testing useEffect and useState</h1>
       <h2>Counter</h2>
       <h3>number:{number}</h3>

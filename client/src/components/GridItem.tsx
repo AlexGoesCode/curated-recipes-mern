@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Recipe } from '../types/Types';
 import LikeButton from './LikeButton';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import { memo } from 'react';
 
 interface GridItemProps {
@@ -11,7 +11,7 @@ interface GridItemProps {
 }
 
 const GridItem = memo(({ item, isLiked, fetchData }: GridItemProps) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   return (
     <div className='relative bg-gray-900 bg-opacity-60 w-56 p-4 border rounded-2xl shadow-md cursor-pointer'>

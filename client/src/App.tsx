@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import FlowFooter from './components/Footer';
@@ -8,8 +7,6 @@ import Routes from './routes/Routes';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <Router>
       <AuthProvider>

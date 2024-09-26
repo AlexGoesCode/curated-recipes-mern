@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext'; // Ensure this path is correct
-import { Await, useNavigate } from 'react-router-dom';
+// import { Await, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ const Login = () => {
     }
     await login(email, password);
   };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <AuthLayout
