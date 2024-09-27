@@ -69,7 +69,7 @@ const Navbar = () => {
   };
 
   return (
-    <Disclosure as='nav' className='bg-gray-700 bg-opacity-85'>
+    <Disclosure as='nav' className='z-20 bg-gray-700 bg-opacity-85'>
       {({ open }) => (
         <>
           <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
