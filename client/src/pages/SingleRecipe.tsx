@@ -71,7 +71,7 @@ function SingleRecipe() {
   }
 
   return (
-    <main className='h-screen -my-20 flex justify-center items-center bg-eggshell text-gray-100'>
+    <main className='z-10 h-screen sm:-my-20 flex justify-center items-center bg-eggshell text-gray-100'>
       <article className='p-3 bg-gray-900 bg-opacity-70 border rounded-3xl max-h-full max-w-5xl h-full w-full md:h-auto md:w-auto flex flex-col md:flex-row overflow-y-auto'>
         <div className='md:w-1/2 flex justify-center items-center p-2'>
           <div className='w-full'>
