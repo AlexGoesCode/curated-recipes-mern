@@ -70,7 +70,7 @@ const Navbar = () => {
 
   return (
     <Disclosure as='nav' className='z-20 bg-gray-700 bg-opacity-85'>
-      {({ open }) => (
+      {({ open, close }) => (
         <>
           <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
             <div className='flex h-16 items-center justify-between'>
@@ -230,20 +230,22 @@ const Navbar = () => {
           <DisclosurePanel className='sm:hidden'>
             <div className='space-y-1 px-2 pb-3 pt-2'>
               {navigation.map((item) => (
-                <DisclosureButton
+                <NavLink
                   key={item.name}
-                  as={Link}
                   to={item.href}
-                  className={classNames(
-                    item.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  onClick={() => close()} // Close the menu when a link is clicked
+                  className={({ isActive }) =>
+                    classNames(
+                      isActive
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      'block rounded-md px-3 py-2 text-base font-medium'
+                    )
+                  }
                   aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
-                </DisclosureButton>
+                </NavLink>
               ))}
             </div>
           </DisclosurePanel>
