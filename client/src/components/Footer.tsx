@@ -7,7 +7,7 @@ const FlowFooter = () => {
   return (
     <Footer
       container
-      className='bg-gray-700 bg-opacity-50 rounded-none bg-transparent relative'
+      className='z-20 bg-gray-700 bg-opacity-50 rounded-none bg-transparent relative'
     >
       <Footer.Copyright
         href='#'
