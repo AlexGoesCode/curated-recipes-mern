@@ -6,7 +6,7 @@ import colors from 'colors';
 import userRouter from './routes/userRouter.js';
 import recipesRouter from './routes/recipesRouter.js';
 import { cloudinaryConfig } from './config/cloudinary.js';
-import { baseUrl } from './serverConfig.js';
+import { baseUrl, port, mongoDbUrl } from './serverConfig.js';
 
 dotenv.config();
 
@@ -20,9 +20,8 @@ const addMiddlewares = (app) => {
 
 //* Start the server by calling app.listen()
 const startServer = (app) => {
-  const port = process.env.PORT || 5022;
   app.listen(port, () => {
-    console.log('Server is running on port', port);
+    console.log(`Server is running on port ${port}`);
   });
 };
 
@@ -34,10 +33,13 @@ const loadRoutes = (app) => {
 //* Connect to the MongoDB database by calling mongoose.connect()
 const DBConnection = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_DB);
+    await mongoose.connect(mongoDbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log('Connection with MongoDB established'.bgGreen);
   } catch (error) {
-    console.log('Problems connecting to MongoDB'.bgRed, error);
+    console.log('Problem with connecting to MongoDB'.bgRed, error);
   }
 };
 
