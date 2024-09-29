@@ -11,6 +11,7 @@ import {
   UserType,
 } from '../types/Types';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../config';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -29,7 +30,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 //* AuthProvider component that wraps the entire application and provides the authentication context.
-export const AuthProvider = ({ children }: { children: ReactNode }) => { 
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,10 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       body: urlencoded,
     };
     try {
-      const response = await fetch(
-        'http://localhost:5022/api/user/login',
-        requestOptions
-      );
+      const response = await fetch(`${baseUrl}/api/user/login`, requestOptions);
       if (!response.ok) throw new Error('Failed to login');
 
       if (response.ok) {
@@ -106,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
     try {
       const response = await fetch(
-        'http://localhost:5022/api/user/profile',
+        `${baseUrl}/api/user/profile`,
         requestOptions
       );
       if (!response.ok && response.status === 401) {

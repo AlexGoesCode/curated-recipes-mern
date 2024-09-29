@@ -6,6 +6,7 @@ import { Recipe } from '../types/Types';
 import Select from 'react-select';
 import { MultiValue } from 'react-select';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { baseUrl } from '../config';
 
 const dietOptions = [
   { value: 'none', label: 'None' },
@@ -125,7 +126,7 @@ const CreateRecipe = () => {
 
     try {
       const response = await fetch(
-        'http://localhost:5022/api/curated-recipes/new-recipe',
+        `${baseUrl}/api/curated-recipes/new-recipe`,
         {
           method: 'POST',
           body: formData,

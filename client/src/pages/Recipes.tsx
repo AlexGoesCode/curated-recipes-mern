@@ -3,6 +3,7 @@ import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
 import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
+import { baseUrl } from '../config';
 
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,7 +21,7 @@ const Recipes = () => {
     console.log('Search By:', searchBy); // Log the search type
 
     try {
-      let url = `http://localhost:5022/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=10`;
+      let url = `${baseUrl}/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=10`;
 
       console.log('Fetching URL:', url); // Log the final API URL
 

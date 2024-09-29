@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Recipe, SingleRecipeOkResponse } from '../types/Types';
+import { baseUrl } from '../config';
 
 function SingleRecipe() {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -9,7 +10,7 @@ function SingleRecipe() {
   const navigate = useNavigate();
 
   const fetchRecipe = async () => {
-    const url = `http://localhost:5022/api/curated-recipes/${recipeid}`;
+    const url = `${baseUrl}/api/curated-recipes/${recipeid}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -32,7 +33,7 @@ function SingleRecipe() {
   }, [recipeid]);
 
   const handleLikeRecipe = async () => {
-    const url = `http://localhost:5022/api/curated-recipes/${recipeid}/like`;
+    const url = `${baseUrl}/api/curated-recipes/${recipeid}/like`;
     try {
       const response = await fetch(url, {
         method: 'POST',

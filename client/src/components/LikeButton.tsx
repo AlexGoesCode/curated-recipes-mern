@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+import { baseUrl } from '../config';
 
 interface LikeButtonProps {
   recipeId: string;
@@ -40,7 +41,7 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
         return;
       }
 
-      const url = `http://localhost:5022/api/curated-recipes/${recipeId}/${
+      const url = `${baseUrl}/api/curated-recipes/${recipeId}/${
         isLiked ? 'unlike' : 'like'
       }`;
       const method = isLiked ? 'DELETE' : 'POST';

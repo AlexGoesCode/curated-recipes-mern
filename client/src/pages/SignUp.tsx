@@ -3,6 +3,7 @@ import AuthLayout from '../components/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { LoginAndSignUpResponse } from '../types/Types';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../config';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -59,7 +60,7 @@ const SignUp = () => {
     //
     try {
       const response = await fetch(
-        'http://localhost:5022/api/user/register',
+        `${baseUrl}/api/user/register`,
         requestOptions
       );
       if (!response.ok) {

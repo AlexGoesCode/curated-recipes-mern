@@ -12,6 +12,7 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, NavLink } from 'react-router-dom';
+import { baseUrl } from '../config';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -40,16 +41,13 @@ const Navbar = () => {
         formData.append('avatar', file);
 
         // Mock upload to server. Replace with your own server
-        const response = await fetch(
-          'http://localhost:5022/api/user/upload-avatar',
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you use token-based authentication
-            },
-            body: formData,
-          }
-        );
+        const response = await fetch(`${baseUrl}/api/user/upload-avatar`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you use token-based authentication
+          },
+          body: formData,
+        });
 
         if (!response.ok) {
           throw new Error('Failed to upload avatar');
