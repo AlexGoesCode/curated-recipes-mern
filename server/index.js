@@ -6,6 +6,7 @@ import colors from 'colors';
 import userRouter from './routes/userRouter.js';
 import recipesRouter from './routes/recipesRouter.js';
 import { cloudinaryConfig } from './config/cloudinary.js';
+import { baseUrl } from './serverConfig.js';
 
 dotenv.config();
 
@@ -26,8 +27,8 @@ const startServer = (app) => {
 };
 
 const loadRoutes = (app) => {
-  app.use('/api/user', userRouter);
-  app.use('/api/curated-recipes', recipesRouter);
+  app.use(`${baseUrl}/api/user`, userRouter); // added ${baseUrl}
+  app.use(`${baseUrl}/api/curated-recipes`, recipesRouter); // added ${baseUrl}
 };
 
 //* Connect to the MongoDB database by calling mongoose.connect()
