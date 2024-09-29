@@ -19,9 +19,11 @@ const Login = () => {
       console.log('Error: Password must be at least 6 characters long.');
       return;
     }
+
     try {
-      login(email, password);
+      await login(email, password);
       console.log('Login successful');
+      alert('Login successful!');
     } catch (err) {
       console.error('Login failed:', err);
     }
