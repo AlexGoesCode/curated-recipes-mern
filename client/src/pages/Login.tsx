@@ -10,11 +10,21 @@ const Login = () => {
   const { login, setError, error, isAuthenticated } = useAuth();
 
   const handleLogin = async () => {
+    console.log('Login button clicked');
+    console.log('Email:', email);
+    console.log('Password:', password);
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
+      console.log('Error: Password must be at least 6 characters long.');
       return;
     }
-    await login(email, password);
+    try {
+      login(email, password);
+      console.log('Login successful');
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
   };
   // const navigate = useNavigate();
 
