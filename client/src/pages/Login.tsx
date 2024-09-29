@@ -21,8 +21,8 @@ const Login = () => {
 
     try {
       await login(email, password);
-      console.log('Login successful');
-      alert('Login successful!');
+      // console.log('Login successful');
+      // alert('Login successful!');
     } catch (err) {
       console.error('Login failed:', err);
     }
