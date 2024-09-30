@@ -2,12 +2,12 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface ProtectedRouteProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 // ProtectedRoute component that will redirect to login if user is not authenticated.
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -33,7 +33,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user?.email) {
     return <Navigate to='/login' />;
   }
 

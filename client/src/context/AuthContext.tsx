@@ -26,6 +26,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+//* AuthProvider component that wraps the entire application and provides the authentication context.
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     console.log(`Logging in with username: ${email} and password: ${password}`);
 
+    //* Headers make sure the content type is set to form data
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -49,27 +51,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       body: urlencoded,
     };
     try {
-      setIsLoading(true); // Line 35: Set loading state to true
       const response = await fetch(`${baseUrl}/api/user/login`, requestOptions);
       if (!response.ok) throw new Error('Failed to login');
 
-      const result = (await response.json()) as LoginAndSignUpResponse;
-      console.log('result :>> ', result);
-      if (!result.token) {
-        alert('You need to login first');
-        return;
+      if (response.ok) {
+        const result = (await response.json()) as LoginAndSignUpResponse;
+        console.log('result :>> ', result);
+        navigate('/recipes');
+        if (!result.token) {
+          alert('you need to login first');
+          return;
+        }
+        if (result.token) {
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('user', JSON.stringify(result.user));
+          setUser(result.user);
+          setIsAuthenticated(true);
+          setIsLoading(false);
+        }
       }
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('user', JSON.stringify(result.user));
-      setUser(result.user);
-      setIsAuthenticated(true);
-      navigate('/recipes'); // Redirect to recipes after login
     } catch (error) {
       console.log('error :>> ', error);
-      setError('Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false); // Line 56: Set loading state to false
+      setIsLoading(false);
     }
+    setError(null);
   };
 
   const logout = () => {
@@ -78,7 +83,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('Logging out...');
     setIsAuthenticated(false);
     setUser(null);
-    navigate('/login'); // Redirect to login after logout
   };
 
   const getUserProfile = async () => {
@@ -93,26 +97,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       headers: myHeaders,
     };
     try {
-      setIsLoading(true); // Line 82: Set loading state to true
       const response = await fetch(
         `${baseUrl}/api/user/profile`,
         requestOptions
       );
       if (!response.ok && response.status === 401) {
         localStorage.removeItem('token');
+        setIsLoading(false);
         setIsAuthenticated(false);
+        // alert('you need to login ');
         navigate('/login');
         return;
       }
       const result = (await response.json()) as GetProfileOkResponse;
       console.log('result profile', result);
       setUser(result.user);
-      setIsAuthenticated(true);
+      setIsLoading(false);
     } catch (error) {
       console.log('error getting profile :>> ', error);
-      setError('Failed to fetch user profile.');
-    } finally {
-      setIsLoading(false); // Line 101: Set loading state to false
+      setIsLoading(false);
     }
   };
 
@@ -121,9 +124,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (token) {
       getUserProfile();
+      setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      setIsLoading(false); // Line 111: Set loading state to false if no token
+      // alert('you need to login first');
     }
   }, []);
 
