@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
 import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
 import { baseUrl } from '../config';
+
+const MOBILE_BREAKPOINT = 640;
 
 const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,16 +15,29 @@ const Recipes = () => {
   const [items, setItems] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    window.innerWidth < MOBILE_BREAKPOINT ? 5 : 10
+  );
 
-  // Fetch data based on searchTerm, searchBy, and currentPage
-  const fetchData = async () => {
+  // Debounced resize handler
+  const handleResize = useCallback(() => {
+    setItemsPerPage(window.innerWidth < MOBILE_BREAKPOINT ? 5 : 10);
+  }, []);
+
+  useEffect(() => {
+    const debouncedHandleResize = debounce(handleResize, 300);
+    window.addEventListener('resize', debouncedHandleResize);
+    return () => window.removeEventListener('resize', debouncedHandleResize);
+  }, [handleResize]);
+
+  // Fetch data based on searchTerm, searchBy, currentPage, and itemsPerPage
+  const fetchData = useCallback(async () => {
     console.log('%c fetching recipes', 'color: red');
     console.log('Search Term:', searchTerm); // Log the search term
     console.log('Search By:', searchBy); // Log the search type
 
     try {
-      let url = `${baseUrl}/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=10`;
-
+      const url = `${baseUrl}/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=${itemsPerPage}`;
       console.log('Fetching URL:', url); // Log the final API URL
 
       const response = await fetch(url);
@@ -31,10 +46,10 @@ const Recipes = () => {
 
       if (Array.isArray(data)) {
         setItems(data);
-        setTotalPages(Math.ceil(data.length / 10) || 1); // Assuming 5 items per page
+        setTotalPages(Math.ceil(data.length / itemsPerPage) || 1); // Use itemsPerPage
       } else if (data && Array.isArray(data.recipes)) {
         setItems(data.recipes);
-        setTotalPages(Math.ceil(data.totalCount / 10) || 1); // Use totalCount from API response
+        setTotalPages(Math.ceil(data.totalCount / itemsPerPage) || 1); // Use itemsPerPage
       } else {
         console.warn('Unexpected data format:', data);
         setItems([]);
@@ -45,11 +60,11 @@ const Recipes = () => {
       setItems([]);
       setTotalPages(1);
     }
-  };
+  }, [searchTerm, searchBy, currentPage, itemsPerPage]);
 
   useEffect(() => {
     fetchData();
-  }, [searchTerm, searchBy, currentPage]);
+  }, [fetchData]);
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -80,5 +95,18 @@ const Recipes = () => {
     </div>
   );
 };
+
+// Debounce function to limit the rate at which a function can fire.
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default Recipes;
