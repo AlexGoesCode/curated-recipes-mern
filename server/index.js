@@ -26,17 +26,14 @@ const startServer = (app) => {
 };
 
 const loadRoutes = (app) => {
-  app.use(`${baseUrl}/api/user`, userRouter); // added ${baseUrl}
-  app.use(`${baseUrl}/api/curated-recipes`, recipesRouter); // added ${baseUrl}
+  app.use('/api/user', userRouter); // added ${baseUrl}
+  app.use('/api/curated-recipes', recipesRouter); // added ${baseUrl}
 };
 
 //* Connect to the MongoDB database by calling mongoose.connect()
 const DBConnection = async () => {
   try {
-    await mongoose.connect(mongoDbUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(mongoDbUrl, {});
     console.log('Connection with MongoDB established'.bgGreen);
   } catch (error) {
     console.log('Problem with connecting to MongoDB'.bgRed, error);
