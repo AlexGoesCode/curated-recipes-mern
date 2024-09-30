@@ -98,14 +98,14 @@ const Recipes = () => {
 
 // Debounce function to limit the rate at which a function can fire.
 function debounce(func: Function, wait: number) {
-  let timeout: NodeJS.Timeout;
+  let timeout: number; // Change from NodeJS.Timeout to number
   return function executedFunction(...args: any) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
     };
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = window.setTimeout(later, wait); // Use window.setTimeout
   };
 }
 
