@@ -20,28 +20,22 @@ interface AuthContextType {
   setError: (error: string) => void;
   error: string | null;
   user: UserType | null;
-  // avatarUrl: string;
-  // updateUserAvatar: (url: string) => void;
-  // token: string | null;
   getUserProfile: () => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-//* AuthProvider component that wraps the entire application and provides the authentication context.
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const [avatarUrl, setAvatarUrl] = useState('');
 
   const login = async (email: string, password: string) => {
     console.log(`Logging in with username: ${email} and password: ${password}`);
 
-    //* Headers make sure the content type is set to form data
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -55,32 +49,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       body: urlencoded,
     };
     try {
+      setIsLoading(true); // Line 35: Set loading state to true
       const response = await fetch(`${baseUrl}/api/user/login`, requestOptions);
       if (!response.ok) throw new Error('Failed to login');
 
-      if (response.ok) {
-        const result = (await response.json()) as LoginAndSignUpResponse;
-        console.log('result :>> ', result);
-        navigate('/recipes');
-        if (!result.token) {
-          alert('you need to login first');
-          return;
-        }
-        if (result.token) {
-          localStorage.setItem('token', result.token);
-          localStorage.setItem('user', JSON.stringify(result.user));
-          setUser(result.user);
-          // setAvatarUrl(result.user.avatar);
-          setIsAuthenticated(true);
-          setIsLoading(false);
-        }
+      const result = (await response.json()) as LoginAndSignUpResponse;
+      console.log('result :>> ', result);
+      if (!result.token) {
+        alert('You need to login first');
+        return;
       }
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('user', JSON.stringify(result.user));
+      setUser(result.user);
+      setIsAuthenticated(true);
+      navigate('/recipes'); // Redirect to recipes after login
     } catch (error) {
       console.log('error :>> ', error);
-      setIsLoading(false);
+      setError('Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false); // Line 56: Set loading state to false
     }
-
-    setError(null);
   };
 
   const logout = () => {
@@ -89,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('Logging out...');
     setIsAuthenticated(false);
     setUser(null);
+    navigate('/login'); // Redirect to login after logout
   };
 
   const getUserProfile = async () => {
@@ -103,26 +93,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       headers: myHeaders,
     };
     try {
+      setIsLoading(true); // Line 82: Set loading state to true
       const response = await fetch(
         `${baseUrl}/api/user/profile`,
         requestOptions
       );
       if (!response.ok && response.status === 401) {
         localStorage.removeItem('token');
-        setIsLoading(false);
         setIsAuthenticated(false);
-
-        // alert('you need to login ');
         navigate('/login');
         return;
       }
       const result = (await response.json()) as GetProfileOkResponse;
       console.log('result profile', result);
       setUser(result.user);
-      setIsLoading(false);
+      setIsAuthenticated(true);
     } catch (error) {
       console.log('error getting profile :>> ', error);
-      setIsLoading(false);
+      setError('Failed to fetch user profile.');
+    } finally {
+      setIsLoading(false); // Line 101: Set loading state to false
     }
   };
 
@@ -131,22 +121,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (token) {
       getUserProfile();
-      setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      // alert('you need to login first');
+      setIsLoading(false); // Line 111: Set loading state to false if no token
     }
   }, []);
-
-  //!Delete updateUserAvatar function and stateVariable
-  // const updateUserAvatar = (url: string) => {
-  //   setAvatarUrl(url);
-  //   if (user) {
-  //     const updatedUser = { ...user, avatar: url };
-  //     setUser(updatedUser);
-  //     localStorage.setItem('user', JSON.stringify(updatedUser));
-  //   }
-  // };
 
   return (
     <AuthContext.Provider
@@ -156,7 +135,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         setError,
         error,
-        // avatarUrl,
         user,
         getUserProfile,
         isLoading,
