@@ -1,5 +1,5 @@
-// import { useContext, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -13,16 +13,17 @@ interface LikeButtonProps {
 
 const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
   const { user, getUserProfile } = useAuth();
-  console.log('isLiked :>> ', isLiked);
+  const navigate = useNavigate(); // <-- Initialize useNavigate
 
   const handleLike = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    e.stopPropagation(); // Prevent the event from bubbling up to the parent div
+    e.stopPropagation(); // Prevent event bubbling
 
-    console.log('user :>> ', user);
-    console.log('recipeId :>> ', recipeId);
-    console.log('isLiked :>> ', isLiked);
+    if (!user?.id) {
+      navigate('/login'); // <-- Redirect to login if not authenticated
+      return;
+    }
 
     try {
       const myHeaders = new Headers();
@@ -34,12 +35,7 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
 
       const urlencoded = new URLSearchParams();
       urlencoded.append('recipeId', recipeId);
-      urlencoded.append('userId', user?.id ?? '');
-
-      if (!user?.id || !recipeId) {
-        alert('you need to login first to like/unlike a recipe');
-        return;
-      }
+      urlencoded.append('userId', user.id);
 
       const url = `${baseUrl}/api/curated-recipes/${recipeId}/${
         isLiked ? 'unlike' : 'like'
@@ -47,18 +43,14 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
       const method = isLiked ? 'DELETE' : 'POST';
 
       const response = await fetch(url, {
-        method: method,
+        method,
         headers: myHeaders,
         body: urlencoded,
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log(`${isLiked ? 'recipe unliked' : 'recipe liked'}`, data);
-        fetchData();
-        getUserProfile();
-      } else {
-        console.log(`can't ${isLiked ? 'unlike' : 'like'} recipe`);
+        fetchData(); // Refresh data to reflect the change
+        getUserProfile(); // Update user profile
       }
     } catch (error) {
       console.error(`Error ${isLiked ? 'unliking' : 'liking'} recipe:`, error);
