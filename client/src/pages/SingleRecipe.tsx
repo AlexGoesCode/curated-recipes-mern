@@ -85,27 +85,35 @@ function SingleRecipe() {
           </div>
         </div>
         <div className='relative px-4 py-2 font-outfit text-wenge-brown md:w-1/2'>
-          <button
-            className='absolute top-2 right-4 w-16 bg-orange-400 p-1 rounded-full'
-            onClick={handleBack}
-          >
-            Back
-          </button>
-          <h1 className='font-fancy text-3xl text-center mt-10 mb-2 text-dark-charcoal'>
-            {recipe.name}
-          </h1>
-          <div className='flex justify-between mb-8 text-lg'>
-            <p className='mt-4'>Origin: {recipe.origin}</p>
-            <p className='mt-4 ml-4'>Diet: {recipe.diet}</p>
+          <div className='flex justify-between items-center mt-2 mb-6 sm:mb-8'>
+            <h1 className='font-fancy text-3xl text-dark-charcoal'>
+              {recipe.name}
+            </h1>
+            <button
+              className='w-24 bg-orange-400 p-3 text-lg font-medium rounded-full'
+              onClick={handleBack}
+            >
+              Back
+            </button>
+          </div>
+          <div className='flex justify-between mb-8 '>
+            <div className='w-1/2 pr-2'>
+              <h2 className='text-xl'>Origin:</h2>
+              <p className='text-lg ml-4'>{recipe.origin}</p>
+            </div>
+            <div className='w-1/2 pl-2'>
+              <h2 className='text-xl'>Diet:</h2>
+              <p className='text-lg ml-4'>{recipe.diet}</p>
+            </div>
           </div>
           <div className='flex justify-between mb-8'>
             <div className='w-1/2 pr-2'>
-              <h2 className='text-dark-raspberry text-lg ml-2'>Difficulty</h2>
-              <p className='ml-4 text-md'>{recipe.difficulty}</p>
+              <h2 className='text-dark-raspberry text-xl'>Difficulty:</h2>
+              <p className='ml-4 text-lg'>{recipe.difficulty}</p>
             </div>
             <div className='w-1/2 pl-2'>
-              <h2 className='text-dark-raspberry text-lg ml-2'>Likes</h2>
-              <div className='ml-4 flex items-center text-md'>
+              <h2 className='text-dark-raspberry text-xl'>Likes:</h2>
+              <div className='ml-4 flex items-center text-lg'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   viewBox='0 0 24 24'
@@ -125,17 +133,17 @@ function SingleRecipe() {
           </div>
           <div className='flex mt-4'>
             <div className='w-1/2 pr-2'>
-              <h3 className='font-fancy text-xl text-nutmeg'>Ingredients</h3>
+              <h2 className='font-fancy text-xl text-nutmeg'>Ingredients:</h2>
               <ul className='list-disc marker:text-nutmeg mt-2 ml-4 text-wenge-brown marker:align-middle max-h-40 overflow-y-auto'>
                 {recipe.ingredients.map((ingredient, index) => (
-                  <li className='pl-2 mt-1' key={index}>
+                  <li className=' mt-1' key={index}>
                     {ingredient}
                   </li>
                 ))}
               </ul>
             </div>
             <div className='w-1/2 pl-2'>
-              <h3 className='font-fancy text-xl text-nutmeg'>Instructions</h3>
+              <h2 className='font-fancy text-xl text-nutmeg'>Instructions:</h2>
               <p className='mt-2 ml-4 max-h-40 overflow-y-auto'>
                 {recipe.instructions}
               </p>
