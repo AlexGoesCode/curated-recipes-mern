@@ -85,7 +85,7 @@ function SingleRecipe() {
           </div>
         </div>
         <div className='relative px-4 py-2 font-outfit text-wenge-brown md:w-1/2'>
-          <div className='flex justify-between items-center mt-2 mb-6 sm:mb-8'>
+          <div className='flex justify-between items-center mt-2 mb-10 sm:mb-12'>
             <h1 className='font-fancy text-3xl text-dark-charcoal'>
               {recipe.name}
             </h1>
