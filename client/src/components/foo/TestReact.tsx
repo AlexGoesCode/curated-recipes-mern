@@ -14,7 +14,7 @@ function TestReact() {
   const sayHi = () => {
     console.log('HI THERE');
   };
-  //   sayHi(); // this function call will call and execute the function everytime the component run/load/mount
+
   const changeWord = () => {
     if (word === 'Hello') {
       setWord('World');
