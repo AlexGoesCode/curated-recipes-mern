@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
-    navigate('/login'); // Redirect to login after logout
+    navigate('/login');
   };
 
   const getUserProfile = async () => {
@@ -101,7 +101,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!response.ok) {
         if (response.status === 401) {
-          // Token is invalid or expired
           logout();
         }
         return;

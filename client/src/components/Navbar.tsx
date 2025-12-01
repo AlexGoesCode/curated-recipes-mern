@@ -40,11 +40,10 @@ const Navbar = () => {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        // Mock upload to server. Replace with your own server
         const response = await fetch(`${baseUrl}/api/user/upload-avatar`, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you use token-based authentication
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
           body: formData,
         });
@@ -57,9 +56,6 @@ const Navbar = () => {
 
         console.log('File uploaded successfully', data);
         getUserProfile();
-
-        // Optionally, update the avatar URL in your state/context
-        // updateUserAvatar(data.avatar);
       } catch (error) {
         console.error('Error uploading avatar:', error);
       }
@@ -87,7 +83,6 @@ const Navbar = () => {
                 <div className='flex flex-shrink-0 items-center'></div>
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
-                    {/* <label htmlFor='avatar-file'>select file</label> */}
                     <input
                       type='file'
                       name='avatar-file'
@@ -231,7 +226,7 @@ const Navbar = () => {
                 <NavLink
                   key={item.name}
                   to={item.href}
-                  onClick={() => close()} // Close the menu when a link is clicked
+                  onClick={() => close()}
                   className={({ isActive }) =>
                     classNames(
                       isActive

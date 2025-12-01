@@ -3,7 +3,7 @@ export const fetchUserLikes = async (token: string) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`, // Add your auth token here
+      Authorization: `Bearer ${token}`,
     },
   });
   const data = await response.json();

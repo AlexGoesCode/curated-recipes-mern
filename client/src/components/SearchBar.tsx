@@ -51,9 +51,8 @@ function SearchBar({
     setSearchOption(selectedOption);
     setSearchBy(selectedOption);
 
-    // Automatically fetch items when "diet" is selected
     if (selectedOption === 'diet') {
-      setSearchTerm(''); // Clear the search term for diet
+      setSearchTerm('');
       handleSearch();
     }
   }
