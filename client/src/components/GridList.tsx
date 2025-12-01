@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import GridItem from './GridItem';
 import { Recipe } from '../types/Types';
 import { useAuth } from '../context/AuthContext';
@@ -11,8 +10,8 @@ interface GridListProps {
 function GridList({ items, fetchData }: GridListProps) {
   const { user } = useAuth();
 
-  console.log('Rendering GridList with items:', items); // Debug log
-  console.log('Total items:', items.length); // Additional log for item count
+  console.log('Rendering GridList with items:', items);
+  console.log('Total items:', items.length);
 
   return (
     <div className='p-4'>
@@ -22,7 +21,7 @@ function GridList({ items, fetchData }: GridListProps) {
             <GridItem
               key={item._id}
               item={item}
-              isLiked={item._id ? item.likes.includes(user!.id) : false} // Check if _id is defined
+              isLiked={item._id ? item.likes.includes(user!.id) : false}
               fetchData={fetchData}
             />
           ))}
