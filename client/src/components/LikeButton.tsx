@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -13,15 +13,15 @@ interface LikeButtonProps {
 
 const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
   const { user, getUserProfile } = useAuth();
-  const navigate = useNavigate(); // <-- Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLike = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
 
     if (!user?.id) {
-      navigate('/login'); // <-- Redirect to login if not authenticated
+      navigate('/login');
       return;
     }
 
@@ -49,8 +49,8 @@ const LikeButton = ({ recipeId, isLiked, fetchData }: LikeButtonProps) => {
       });
 
       if (response.ok) {
-        fetchData(); // Refresh data to reflect the change
-        getUserProfile(); // Update user profile
+        fetchData();
+        getUserProfile();
       }
     } catch (error) {
       console.error(`Error ${isLiked ? 'unliking' : 'liking'} recipe:`, error);
