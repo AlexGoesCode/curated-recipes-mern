@@ -1,10 +1,4 @@
-// import { useContext } from 'react';
-// import { AuthContext, useAuth } from '../../context/AuthContext';
-
 const Home = () => {
-  // const { user } = useAuth();
-  // const { user } = useContext(AuthContext);
-
   return (
     <div className='relative inset-0 z-10 flex items-center justify-center'>
       <div className='bg-gray-900 bg-opacity-60 max-w-2xl h-auto p-10 mt-40 border rounded-2xl shadow-lg text-center'>
