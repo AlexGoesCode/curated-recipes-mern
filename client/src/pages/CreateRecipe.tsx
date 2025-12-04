@@ -16,14 +16,12 @@ const dietOptions = [
   { value: 'dairy-free', label: 'Dairy-Free' },
 ];
 
-// Define action types for the reducer
 type RecipeAction =
   | { type: 'SET_FIELD'; field: string; value: any }
   | { type: 'SET_INGREDIENT'; index: number; value: string }
   | { type: 'ADD_INGREDIENT' }
   | { type: 'REMOVE_INGREDIENT'; index: number };
 
-// Reducer function for recipe state management
 const recipeReducer = (state: Recipe, action: RecipeAction): Recipe => {
   switch (action.type) {
     case 'SET_FIELD':
@@ -82,24 +80,19 @@ const CreateRecipe = () => {
   };
 
   const isFormReadyToSubmit = () => {
-    // Check if all required fields are filled
     const hasName = recipe.name.trim() !== '';
     const hasOrigin = recipe.origin.trim() !== '';
     const hasInstructions = recipe.instructions.trim() !== '';
 
-    // Check if at least 3 ingredients have text
     const filledIngredients = recipe.ingredients.filter(
       (ingredient) => ingredient.trim() !== ''
     );
     const hasEnoughIngredients = filledIngredients.length >= 3;
 
-    // Check if at least one diet option is selected
     const hasDietOption = recipe.diet.length > 0;
 
-    // Check if an image is selected
     const hasImage = imageFile !== null;
 
-    // Return true only if all conditions are met
     return (
       hasName &&
       hasOrigin &&
