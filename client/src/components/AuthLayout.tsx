@@ -3,9 +3,9 @@ import React from 'react';
 interface AuthLayoutProps {
   title: string;
   buttonText: string;
-  onButtonClick: (event: React.FormEvent) => void; // expects an event
+  onButtonClick: (event: React.FormEvent) => void;
   children?: React.ReactNode;
-  showSignupLink?: boolean; // Add this prop
+  showSignupLink?: boolean;
   buttonClassName?: string;
 }
 
@@ -29,8 +29,8 @@ const AuthLayout = ({
               <form
                 className='space-y-6'
                 onSubmit={(e) => {
-                  e.preventDefault(); // prevents the form from submitting
-                  onButtonClick(e); // pass the event to the handler
+                  e.preventDefault();
+                  onButtonClick(e);
                 }}
               >
                 {children}
