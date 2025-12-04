@@ -4,6 +4,7 @@ import GridList from '../components/GridList';
 import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
 import { baseUrl } from '../config';
+import { debounce } from '../utils/debounce';
 
 const MOBILE_BREAKPOINT = 640;
 
@@ -95,18 +96,5 @@ const Recipes = () => {
     </div>
   );
 };
-
-// Debounce function to limit the rate at which a function can fire.
-function debounce(func: Function, wait: number) {
-  let timeout: number; // Change from NodeJS.Timeout to number
-  return function executedFunction(...args: any) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = window.setTimeout(later, wait); // Use window.setTimeout
-  };
-}
 
 export default Recipes;
