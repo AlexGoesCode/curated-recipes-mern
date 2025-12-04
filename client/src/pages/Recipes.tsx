@@ -5,6 +5,7 @@ import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
 import { baseUrl } from '../config';
 import { debounce } from '../utils/debounce';
+import { fetchRecipesApi } from '../api/recipes';
 
 const MOBILE_BREAKPOINT = 640;
 

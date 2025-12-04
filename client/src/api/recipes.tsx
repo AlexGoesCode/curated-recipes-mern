@@ -1,5 +1,4 @@
 import { baseUrl } from '../config';
-import { Recipe } from '../types/Types';
 
 export interface FetchRecipesParams {
   searchBy: 'name' | 'ingredients' | 'diet' | 'id';
@@ -13,7 +12,7 @@ export const fetchRecipesApi = async ({
   searchTerm,
   page,
   limit,
-}: FetchRecipesParams): Promise<Recipe[]> => {
+}: FetchRecipesParams) => {
   const url = `${baseUrl}/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${page}&number=${limit}`;
 
   try {
@@ -22,7 +21,7 @@ export const fetchRecipesApi = async ({
       throw new Error(`Error: ${response.status}`);
     }
     const data = await response.json();
-    return data as Recipe[];
+    return data;
   } catch (error) {
     console.error('API Error:', error);
     throw error;
