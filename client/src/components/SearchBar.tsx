@@ -53,7 +53,7 @@ function SearchBar({
 
     if (selectedOption === 'diet') {
       setSearchTerm('');
-      handleSearch();
+      // handleSearch();
     }
   }
 
