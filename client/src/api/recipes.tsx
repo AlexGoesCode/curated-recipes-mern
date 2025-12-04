@@ -8,7 +8,6 @@ export interface FetchRecipesParams {
   limit: number;
 }
 
-// Added ': Promise<Recipe[]>' to use the imported Recipe type
 export const fetchRecipesApi = async ({
   searchBy,
   searchTerm,
@@ -22,7 +21,6 @@ export const fetchRecipesApi = async ({
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
-    // Cast the result to Recipe[] so TypeScript is happy
     const data = await response.json();
     return data as Recipe[];
   } catch (error) {
