@@ -3,7 +3,6 @@ import SearchBar from '../components/SearchBar';
 import GridList from '../components/GridList';
 import Pagination from '../components/Pagination';
 import { Recipe } from '../types/Types';
-import { baseUrl } from '../config';
 import { debounce } from '../utils/debounce';
 import { fetchRecipesApi } from '../api/recipes';
 
@@ -21,7 +20,6 @@ const Recipes = () => {
     window.innerWidth < MOBILE_BREAKPOINT ? 5 : 10
   );
 
-  // Debounced resize handler
   const handleResize = useCallback(() => {
     setItemsPerPage(window.innerWidth < MOBILE_BREAKPOINT ? 5 : 10);
   }, []);
@@ -32,26 +30,25 @@ const Recipes = () => {
     return () => window.removeEventListener('resize', debouncedHandleResize);
   }, [handleResize]);
 
-  // Fetch data based on searchTerm, searchBy, currentPage, and itemsPerPage
   const fetchData = useCallback(async () => {
     console.log('%c fetching recipes', 'color: red');
-    console.log('Search Term:', searchTerm); // Log the search term
-    console.log('Search By:', searchBy); // Log the search type
 
     try {
-      const url = `${baseUrl}/api/curated-recipes/recipesby${searchBy}?${searchBy}=${searchTerm}&page=${currentPage}&number=${itemsPerPage}`;
-      console.log('Fetching URL:', url); // Log the final API URL
+      const data = await fetchRecipesApi({
+        searchBy,
+        searchTerm,
+        page: currentPage,
+        limit: itemsPerPage,
+      });
 
-      const response = await fetch(url);
-      const data = await response.json();
       console.log('Fetched data:', data);
 
       if (Array.isArray(data)) {
         setItems(data);
-        setTotalPages(Math.ceil(data.length / itemsPerPage) || 1); // Use itemsPerPage
+        setTotalPages(Math.ceil(data.length / itemsPerPage) || 1);
       } else if (data && Array.isArray(data.recipes)) {
         setItems(data.recipes);
-        setTotalPages(Math.ceil(data.totalCount / itemsPerPage) || 1); // Use itemsPerPage
+        setTotalPages(Math.ceil(data.totalCount / itemsPerPage) || 1);
       } else {
         console.warn('Unexpected data format:', data);
         setItems([]);
@@ -77,7 +74,7 @@ const Recipes = () => {
     setCurrentPage(page);
   };
 
-  console.log('Items before passing to GridList:', items); // Debug log
+  console.log('Items before passing to GridList:', items);
 
   return (
     <div>
