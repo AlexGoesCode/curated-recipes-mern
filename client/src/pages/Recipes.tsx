@@ -31,7 +31,8 @@ const Recipes = () => {
   }, [handleResize]);
 
   const fetchData = useCallback(async () => {
-    console.log('%c fetching recipes', 'color: red');
+    // console.log('%c fetching recipes', 'color: red');
+    console.log('%c fetching recipes (NEW API)', 'color: red');
 
     try {
       const data = await fetchRecipesApi({
